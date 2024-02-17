@@ -1,0 +1,76 @@
+.rcs-container {
+    position: fixed;
+    inset: 5%;
+
+    display: flex;
+    border: 1px solid black;
+}
+
+.left-content {
+    width: calc(100% - 200px);
+    height: 100%;
+}
+
+.right-content {
+    width: 200px;
+    height: 100%;
+}
+
+.upload-field {
+    width: 100%;
+    height: 90%;
+    background-color: rgb(220, 220, 220);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.option-field {
+    width: 100%;
+    height: 10%;
+    border-top: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.file-input {
+    display: none;
+}
+
+.uploaded-gallery {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    overflow-y: auto;
+    border: 1px solid black;
+    scrollbar-width: thin;
+    scrollbar-color: blue orange;
+}
+
+.ug-header {
+    text-align: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+}
+
+.uploaded-image {
+    width: 100%;
+    height: auto;
+    border: 1px solid black
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: red;
+    color: white;
+    cursor: pointer;
+}
