@@ -5,7 +5,12 @@ import './main.css';
 const Main = () => {
     const mainContainer = useRef();
     const fileInput = useRef();
+    const resultField = useRef();
     const [images, setImages] = useState([]);
+    const [result, setResult] = useState(null);
+    const [resultRetrieved, setResultRetrieved] = useState(false);
+
+    // =============================================================
 
     const handleFileUpload = (event) => {
         event.preventDefault();
@@ -22,10 +27,12 @@ const Main = () => {
 
         const formData = new FormData();
         images.forEach((image, index) => {
-            formData.append('image_' + index, image);
+            formData.append('images', image, image.name);
         });
 
-        fetch('http://localhost:3000/process_image', {
+        const userId = 1;
+
+        fetch(`http://localhost:3000/process_image/${userId}`, {
             method: 'POST',
             body: formData
         })
@@ -34,14 +41,10 @@ const Main = () => {
                 // Create an object URL for the Blob
                 let url = URL.createObjectURL(blob);
 
-                // Create an Image object
-                let img = new Image();
+                // Append the Image object to the body of the document                
+                setResult(<img src={url} />);
 
-                // Set the src of the Image object to the object URL
-                img.src = url;
-
-                // Append the Image object to the body of the document
-                mainContainer.current.appendChild(img);
+                setResultRetrieved(true);
             })
             .catch(error => console.error('Error:', error));
     }
@@ -87,31 +90,42 @@ const Main = () => {
     return (
         <div ref={mainContainer} className='rcs-container'>
             <div className='left-content'>
-                <div
-                    className='upload-field'
-                    onDrop={handleDrop}
-                    onDragOver={handleDragOver}
-                    onClick={() => fileInput.current.click()}
-                >
-                    <div style={{ textAlign: 'center' }}>
-                        Drop images here or click to upload
-                        <br />
-                        Only jpg, jpeg, png files are supported
-                    </div>
+                {resultRetrieved ? (
+                    <>
+                        <div className='result-field' ref={resultField}>{result}</div>
+                        <div className='option-field'>
+                            <button onClick={() => setResultRetrieved(false)}>Upload again</button>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div
+                            className='upload-field'
+                            onDrop={handleDrop}
+                            onDragOver={handleDragOver}
+                            onClick={() => fileInput.current.click()}
+                        >
+                            <div style={{ textAlign: 'center' }}>
+                                Drop images here or click to upload
+                                <br />
+                                Only jpg, jpeg, png files are supported
+                            </div>
 
-                    <input
-                        ref={fileInput}
-                        type="file"
-                        onChange={handleFileUpload}
-                        onClick={(event) => event.target.value = null}
-                        className='file-input'
-                        multiple
-                        accept=".jpg,.jpeg,.png"
-                    />
-                </div>
-                <div className='option-field'>
-                    <button onClick={handleFormSubmit}>Convert now</button>
-                </div>
+                            <input
+                                ref={fileInput}
+                                type="file"
+                                onChange={handleFileUpload}
+                                onClick={(event) => event.target.value = null}
+                                className='file-input'
+                                multiple
+                                accept=".jpg,.jpeg,.png"
+                            />
+                        </div>
+                        <div className='option-field'>
+                            <button onClick={handleFormSubmit}>Convert now</button>
+                        </div>
+                    </>
+                )}
             </div>
             <div className='right-content'>
                 <div className='uploaded-gallery'>
