@@ -1,15 +1,15 @@
-import { RouterProvider } from "react-router-dom"
+import { HashRouter } from "react-router-dom"
 
 import Main from "components/main"
 
 function App() {
   return (
-    <RouterProvider>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Main />} />
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
-    </RouterProvider>
+    </HashRouter>
   )
 }
 
