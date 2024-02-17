@@ -1,15 +1,15 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { RouterProvider } from "react-router-dom"
 
 import Main from "components/main"
 
 function App() {
   return (
-    <BrowserRouter>
+    <RouterProvider>
       <Routes>
         <Route path="/" element={<Main />} />
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
-    </BrowserRouter>
+    </RouterProvider>
   )
 }
 
