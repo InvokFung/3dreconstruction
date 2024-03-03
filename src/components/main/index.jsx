@@ -73,7 +73,7 @@ const Main = () => {
         const userId = 1;
         const projectId = 1;
 
-        // fetch(`http://localhost:3000/process_image/${userId}/${projectId}`, {
+        fetch(`http://localhost:3000/process_image/${userId}/${projectId}`, {
         //     method: 'POST',
         //     body: formData
         // })
@@ -84,8 +84,7 @@ const Main = () => {
         //     })
         //     .catch(error => console.error('Error:', error));
 
-        https://3dreconstruction-api.vercel.app/
-        fetch(`https://3dreconstruction-api.vercel.app/process_image/${userId}/${projectId}`, {
+        // fetch(`https://3dreconstruction-api.vercel.app/process_image/${userId}/${projectId}`, {
             method: 'POST',
             body: formData
         })
