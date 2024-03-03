@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 
 import './main.css';
 
+import Scene from "app/scene"
+
 const Main = () => {
     const mainContainer = useRef();
     const fileInput = useRef();
@@ -14,9 +16,17 @@ const Main = () => {
     const cxVal = useRef();
     const cyVal = useRef();
 
-    const [images, setImages] = useState([]);
+    const [images, setImages] = useState([]);    
     const [result, setResult] = useState(null);
-    const [resultRetrieved, setResultRetrieved] = useState(false);
+    const [resultRetrieved, setResultRetrieved] = useState(false);    
+
+    useEffect(() => {
+        if (resultRetrieved) {
+            const scene = new Scene(resultField.current);
+            scene.init();
+            scene.loadResult(result);
+        }
+    }, [resultRetrieved])
 
     // =============================================================
 
@@ -32,7 +42,7 @@ const Main = () => {
 
     const handleFormSubmit = (event) => {
         event.preventDefault();
-        
+
         if (images.length === 0) {
             return alert("No images were uploaded");
         }
@@ -61,20 +71,16 @@ const Main = () => {
         formData.append('parameters', parametersJson);
 
         const userId = 1;
+        const projectId = 1;
 
-        fetch(`http://localhost:3000/process_image/${userId}`, {
+        fetch(`http://localhost:3000/process_image/${userId}/${projectId}`, {
             method: 'POST',
             body: formData
         })
-            .then(response => response.blob())  // convert the response to a Blob
-            .then(blob => {
-                // Create an object URL for the Blob
-                let url = URL.createObjectURL(blob);
-
-                // Append the Image object to the body of the document                
-                setResult(<img src={url} />);
-
+            .then(response => response.arrayBuffer())  // convert the response to a Blob
+            .then(buffer => {
                 setResultRetrieved(true);
+                setResult(buffer);
             })
             .catch(error => console.error('Error:', error));
     }
@@ -125,7 +131,7 @@ const Main = () => {
             <div className='left-content'>
                 {resultRetrieved ? (
                     <>
-                        <div className='result-field' ref={resultField}>{result}</div>
+                        <div className='result-field' ref={resultField}></div>
                         <div className='option-field'>
                             <button onClick={() => setResultRetrieved(false)}>Upload again</button>
                         </div>

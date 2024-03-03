@@ -10,7 +10,7 @@ export default defineConfig({
   resolve:{
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json'],
     alias:{
-      // "app": fileURLToPath(new URL("./src/app", import.meta.url)),
+      "app": fileURLToPath(new URL("./src/app", import.meta.url)),
       "components": fileURLToPath(new URL("./src/components", import.meta.url)),
     },
   },
