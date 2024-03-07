@@ -25,11 +25,14 @@ jobs:
       run: |
         npm ci
         npm i @rollup/rollup-linux-x64-gnu    
-    - name: Build
-      run: npm run build  # replace with your build command
-
-    - name: Deploy to GitHub Pages
-      uses: actions/gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
+    - name: Commit files
+      run: |
+        git init
+        git config --local user.name $USER_NAME
+        git config --local user.email $USER_EMAIL
+        git status
+        git remote add origin https://$MY_SECRET@github.com/$GITHUB_REPOSITORY.git
+        git checkout -b gh-pages        
+    - name: deploy
+      run: |
+        npm run deploy
