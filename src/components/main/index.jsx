@@ -2,22 +2,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import './main.css';
 
 import Scene from "app/scene"
-import { Readable } from 'stream';
 
-console.log("A")
-// import AWS from 'aws-sdk';
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-console.log("RUN")
-console.log(import.meta.env.VITE_AWS_ACCESS_KEY_ID)
-// Configure the AWS SDK with credentials
-// AWS.config.update({
-//     apiVersion: "latest",
-//     region: import.meta.env.VITE_AWS_REGION,
-//     credentials: {
-//         accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
-//         secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY
-//     }
-// });
 
 const Main = () => {
     const mainContainer = useRef();
@@ -40,20 +26,20 @@ const Main = () => {
     const [downloadUrl, setDownloadUrl] = useState(null);
     const [status, setStatus] = useState("idle");  // ["idle", "processing", "completed"]
     const [resultRetrieved, setResultRetrieved] = useState(false);
-
-    const waitResult = async () => {
-        const [gltfUrl, npyUrl] = await sceneRef.current.loadResult(result);
-        setDownloadUrl({ gltfUrl, npyUrl });
-    }
-
+    
+    // =============================================================
+    // Initialization
     useEffect(() => {
-        if (resultRetrieved) {
-            sceneRef.current = new Scene(resultField.current);
-            sceneRef.current.init();
-            waitResult();
-        }
-    }, [resultRetrieved])
+        console.log("Starting app...")
+        console.log(import.meta.env.VITE_AWS_ACCESS_KEY_ID)
 
+        return () => {
+            if (sceneRef.current) {
+                sceneRef.current.dispose();
+                sceneRef.current = null;
+            }
+        }
+    }, [])
     // =============================================================
 
     useEffect(() => {
@@ -157,16 +143,6 @@ const Main = () => {
         const projectId = 1;
 
         fetch(`http://localhost:3000/process_image/${userId}/${projectId}`, {
-            //     method: 'POST',
-            //     body: formData
-            // })
-            //     .then(response => response.arrayBuffer())  // convert the response to a Blob
-            //     .then(buffer => {
-            //         setResultRetrieved(true);
-            //         setResult(buffer);
-            //     })
-            //     .catch(error => console.error('Error:', error));
-
             // fetch(`https://3dreconstruction-api.vercel.app/process_image/${userId}/${projectId}`, {
             method: 'POST',
             body: formData
@@ -179,22 +155,6 @@ const Main = () => {
                 }
             })
             .catch(error => console.error('Error:', error));
-    }
-
-    const s3Download = async (userData) => {
-        const s3 = new AWS.S3();
-
-        const userId = userData.userId;
-        const projectId = userData.projectId;
-
-        const userResultPath = `user-${userId}/${projectId}/output/accumulated_numpy.npy`;
-
-        const params = {
-            Bucket: import.meta.env.VITE_AWS_BUCKET_NAME,
-            Key: userResultPath,
-        }
-
-        return await s3.getObject(params).promise();
     }
 
     const s3Downloadv3 = async (userData) => {
@@ -226,27 +186,27 @@ const Main = () => {
     }
 
     const fetchResult = async () => {
-        console.log("Fetching result...")
 
-        if (status !== "processing")
+        if (status == "processing")
+            return;
+
+        if (status == "idle")
             setStatus("processing");
+
+        console.log("Fetching result...")
 
         const params = {
             userId: 1,
             projectId: 1
         }
 
-        try {
-            let result = await s3Downloadv3(params);
-            let arrayBuffer = result;
-            setResultRetrieved(true);
-            setResult(arrayBuffer);
-            setStatus("completed");
+        let result = await s3Downloadv3(params);
+        let arrayBuffer = result;
+        setResultRetrieved(true);
+        setResult(arrayBuffer);
+        setStatus("completed");
 
-            console.log("Result fetched.")
-        } catch (error) {
-            console.error('Error:', error)
-        };
+        console.log("Result fetched.")
     }
 
     const downloadResult = (type) => {
@@ -318,18 +278,22 @@ const Main = () => {
         setImages(newImages);
     }
 
-    // =============================================================
-    // Initialization
-    useEffect(() => {
-        console.log(import.meta.env.VITE_AWS_ACCESS_KEY_ID)
-        setStatus("idle");
 
-        return () => {
-            if (sceneRef.current) {
-                sceneRef.current.dispose();
-            }
+    const waitResult = async () => {
+        console.log("Creating scene...")
+        sceneRef.current = new Scene(resultField.current);
+        sceneRef.current.init();
+        const [gltfUrl, npyUrl] = await sceneRef.current.loadResult(result);
+        setDownloadUrl({ gltfUrl, npyUrl });
+    }
+
+    useEffect(() => {
+        console.log(resultRetrieved)
+        if (resultRetrieved && sceneRef.current == null && status != "idle") {
+            waitResult();
         }
-    }, [])
+    }, [resultRetrieved])
+
     // =============================================================
 
     return (

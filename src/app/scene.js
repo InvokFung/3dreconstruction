@@ -11,6 +11,7 @@ class Scene {
     constructor(container) {
         this.container = container;
         this.result = null;
+        this.shouldAnimate = true;
     }
 
     init() {
@@ -40,7 +41,7 @@ class Scene {
         this.guiControls = {
             showGrids: true
         };
-        
+
         this.gui.add(this.guiControls, 'showGrids').onChange((value) => {
             this.gridHelper.visible = value;
         });
@@ -144,6 +145,9 @@ class Scene {
     }
 
     animate() {
+        if (!this.shouldAnimate)
+            return;
+
         requestAnimationFrame(this.animate.bind(this));
 
         this.controls.update();
@@ -163,6 +167,16 @@ class Scene {
         this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+    }
+
+    dispose() {
+        console.log("Disposing scene...")
+        this.shouldAnimate = false;
+        this._unbind();
+        this.gui.destroy();
+        this.gui.domElement.parentNode.removeChild(this.gui.domElement);
+        this.renderer.domElement.parentNode.removeChild(this.renderer.domElement);
+        console.log("Scene disposed")
     }
 }
 
