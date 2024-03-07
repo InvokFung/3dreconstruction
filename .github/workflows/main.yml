@@ -8,8 +8,8 @@ jobs:
     name: Build and deploy gh-pages
     env:
       MY_SECRET   : ${{secrets.commit_secret}}
-      USER_NAME   : githubaction
-      USER_EMAIL  : githubaction@fake.com
+      USER_NAME   : InvokFung
+      USER_EMAIL  : InvokFung@fake.com
       PUBLISH_DIR : ./dist
     runs-on: ubuntu-latest
     strategy:
@@ -23,14 +23,13 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: npm install
       run: |
-        npm install
+        npm ci
         npm i @rollup/rollup-linux-x64-gnu    
-    - name: Commit files
-      run: |
-        git init
-        git config --local user.name $USER_NAME
-        git config --local user.email $USER_EMAIL
-        git status
-    - name: deploy
-      run: |
-        npm run deploy
+    - name: Build
+      run: npm run build  # replace with your build command
+
+    - name: Deploy to GitHub Pages
+      uses: actions/gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
