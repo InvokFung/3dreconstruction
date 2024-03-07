@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-// import AWS from 'aws-sdk';
+import AWS from 'aws-sdk';
 import './main.css';
 
 import Scene from "app/scene"
