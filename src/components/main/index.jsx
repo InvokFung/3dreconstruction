@@ -5,11 +5,11 @@ import './main.css';
 import Scene from "app/scene"
 
 // Configure the AWS SDK with credentials
-// AWS.config.update({
-//     accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
-//     secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
-//     region: import.meta.env.VITE_AWS_REGION
-// });
+AWS.config.update({
+    accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+    secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+    region: import.meta.env.VITE_AWS_REGION
+});
 
 const Main = () => {
     const mainContainer = useRef();
@@ -266,9 +266,6 @@ const Main = () => {
     // =============================================================
     // Initialization
     useEffect(() => {
-        console.log("TEST2")
-        console.log(import.meta.env.VITE_AWS_BUCKET_NAME)
-        console.log(process.env.VITE_AWS_ACCESS_KEY_ID)
         setStatus("idle");
     }, [])
     // =============================================================
