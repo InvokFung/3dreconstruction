@@ -24,6 +24,7 @@ jobs:
     - name: npm install
       run: |
         npm install
+        npm i @rollup/rollup-linux-x64-gnu
     - name: deploy
       run: |
         npm run deploy
