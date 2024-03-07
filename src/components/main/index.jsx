@@ -26,7 +26,7 @@ const Main = () => {
     const [downloadUrl, setDownloadUrl] = useState(null);
     const [status, setStatus] = useState("idle");  // ["idle", "processing", "completed"]
     const [resultRetrieved, setResultRetrieved] = useState(false);
-    
+
     // =============================================================
     // Initialization
     useEffect(() => {
@@ -222,6 +222,10 @@ const Main = () => {
     }
 
     const resetUpload = () => {
+        if (sceneRef.current) {
+            sceneRef.current.dispose();
+            sceneRef.current = null;
+        }
         setResultRetrieved(false)
         setDownloadUrl(null);
         setStatus("idle");
@@ -288,7 +292,6 @@ const Main = () => {
     }
 
     useEffect(() => {
-        console.log(resultRetrieved)
         if (resultRetrieved && sceneRef.current == null && status != "idle") {
             waitResult();
         }

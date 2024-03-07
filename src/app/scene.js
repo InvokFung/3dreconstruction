@@ -174,8 +174,8 @@ class Scene {
         this.shouldAnimate = false;
         this._unbind();
         this.gui.destroy();
-        this.gui.domElement.parentNode.removeChild(this.gui.domElement);
-        this.renderer.domElement.parentNode.removeChild(this.renderer.domElement);
+        this.gui.domElement.remove();
+        this.renderer.domElement.remove();
         console.log("Scene disposed")
     }
 }
