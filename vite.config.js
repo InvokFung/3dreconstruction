@@ -15,6 +15,7 @@ export default defineConfig({
     alias: {
       "app": fileURLToPath(new URL("./src/app", import.meta.url)),
       "components": fileURLToPath(new URL("./src/components", import.meta.url)),
+      'stream': 'stream-browserify'
     },
   },
   plugins: [react()],
