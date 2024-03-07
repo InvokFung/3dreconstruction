@@ -2,7 +2,7 @@ name: deploy gh-pages
 on:
   push:
     branches:
-      - master
+      - main
 jobs:
   build:
     name: Build and deploy gh-pages
@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.x]
+        node-version: [21.x]
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
