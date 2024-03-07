@@ -1,14 +1,22 @@
 import React, { useEffect, useState, useRef } from 'react';
-import AWS from 'aws-sdk';
 import './main.css';
 
 import Scene from "app/scene"
+import { Readable } from 'stream';
 
+console.log("A")
+// import AWS from 'aws-sdk';
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+console.log("RUN")
+console.log(import.meta.env.VITE_AWS_ACCESS_KEY_ID)
 // Configure the AWS SDK with credentials
 // AWS.config.update({
-//     // accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
-//     // secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
-//     region: import.meta.env.VITE_AWS_REGION
+//     apiVersion: "latest",
+//     region: import.meta.env.VITE_AWS_REGION,
+//     credentials: {
+//         accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+//         secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY
+//     }
 // });
 
 const Main = () => {
@@ -25,22 +33,24 @@ const Main = () => {
     const cxVal = useRef();
     const cyVal = useRef();
 
+    const sceneRef = useRef(null);
+
     const [images, setImages] = useState([]);
     const [result, setResult] = useState(null);
     const [downloadUrl, setDownloadUrl] = useState(null);
     const [status, setStatus] = useState("idle");  // ["idle", "processing", "completed"]
     const [resultRetrieved, setResultRetrieved] = useState(false);
 
-    const waitResult = async (scene) => {
-        const [gltfUrl, npyUrl] = await scene.loadResult(result);
+    const waitResult = async () => {
+        const [gltfUrl, npyUrl] = await sceneRef.current.loadResult(result);
         setDownloadUrl({ gltfUrl, npyUrl });
     }
 
     useEffect(() => {
         if (resultRetrieved) {
-            const scene = new Scene(resultField.current);
-            scene.init();
-            waitResult(scene);
+            sceneRef.current = new Scene(resultField.current);
+            sceneRef.current.init();
+            waitResult();
         }
     }, [resultRetrieved])
 
@@ -49,32 +59,44 @@ const Main = () => {
     useEffect(() => {
         switch (status) {
             case "idle":
-                uploadfield_tooltip.current.innerHTML = `
-                    Drop images here or click to upload
-                    <br />
-                    Only jpg, jpeg, png files are supported
-                `;
-                uploadbtn_tooltip.current.innerHTML = `
-                    Convert
-                `;
+                if (uploadfield_tooltip.current) {
+                    uploadfield_tooltip.current.innerHTML = `
+                        Drop images here or click to upload
+                        <br />
+                        Only jpg, jpeg, png files are supported
+                    `;
+                }
+                if (uploadbtn_tooltip.current) {
+                    uploadbtn_tooltip.current.innerHTML = `
+                        Convert
+                    `;
+                }
                 break;
             case "processing":
-                uploadfield_tooltip.current.innerHTML = `
-                    Processing images...
-                    <br />
-                    Please wait...
-                `;
-                uploadbtn_tooltip.current.innerHTML = `
-                    Processing...
-                `;
+                if (uploadfield_tooltip.current) {
+                    uploadfield_tooltip.current.innerHTML = `
+                        Processing images...
+                        <br />
+                        Please wait...
+                    `;
+                }
+                if (uploadbtn_tooltip.current) {
+                    uploadbtn_tooltip.current.innerHTML = `
+                        Processing...
+                    `;
+                }
                 break;
             case "completed":
-                uploadfield_tooltip.current.innerHTML = `
-                    Loading result...
-                `;
-                uploadbtn_tooltip.current.innerHTML = `
-                    Upload again
-                `;
+                if (uploadfield_tooltip.current) {
+                    uploadfield_tooltip.current.innerHTML = `
+                        Loading result...
+                    `;
+                }
+                if (uploadbtn_tooltip.current) {
+                    uploadbtn_tooltip.current.innerHTML = `
+                        Upload again
+                    `;
+                }
                 break;
             default:
                 console.log("Unknown status");
@@ -94,16 +116,16 @@ const Main = () => {
     const handleFormSubmit = (event) => {
         event.preventDefault();
 
-        if (images.length === 0) {
-            return alert("No images were uploaded");
-        }
-
         if (status === "processing")
             return;
 
         if (status === "completed") {
             resetUpload();
             return;
+        }
+
+        if (images.length === 0) {
+            return alert("No images were uploaded");
         }
 
         setStatus("processing");
@@ -175,20 +197,53 @@ const Main = () => {
         return await s3.getObject(params).promise();
     }
 
+    const s3Downloadv3 = async (userData) => {
+        const s3client = new S3Client({
+            region: import.meta.env.VITE_AWS_REGION,
+            credentials: {
+                accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+                secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+            }
+        });
+
+        const userId = userData.userId;
+        const projectId = userData.projectId;
+
+        const userResultPath = `user-${userId}/${projectId}/output/accumulated_numpy.npy`;
+
+        const params = {
+            Bucket: import.meta.env.VITE_AWS_BUCKET_NAME,
+            Key: userResultPath,
+        }
+        const data = await s3client.send(new GetObjectCommand(params));
+
+        const bodyStream = data.Body;
+        const bodyAsString = await bodyStream.transformToByteArray();
+
+        console.log(bodyAsString.buffer)
+
+        return bodyAsString.buffer;
+    }
+
     const fetchResult = async () => {
+        console.log("Fetching result...")
+
+        if (status !== "processing")
+            setStatus("processing");
+
         const params = {
             userId: 1,
             projectId: 1
         }
-        console.log("Fetching result...")
 
         try {
-            let result = await s3Download(params);
-            result = result.Body;
-            let arrayBuffer = result.buffer;
-            console.log(arrayBuffer);
+            let result = await s3Downloadv3(params);
+            let arrayBuffer = result;
             setResultRetrieved(true);
             setResult(arrayBuffer);
+            setStatus("completed");
+
+            console.log("Result fetched.")
         } catch (error) {
             console.error('Error:', error)
         };
@@ -268,6 +323,12 @@ const Main = () => {
     useEffect(() => {
         console.log(import.meta.env.VITE_AWS_ACCESS_KEY_ID)
         setStatus("idle");
+
+        return () => {
+            if (sceneRef.current) {
+                sceneRef.current.dispose();
+            }
+        }
     }, [])
     // =============================================================
 
