@@ -29,6 +29,10 @@
     align-items: center;
 }
 
+.option-field button {
+    margin: 0 10px;
+}
+
 .file-input {
     display: none;
 }
@@ -38,6 +42,7 @@
 .result-field {
     width: 100%;
     height: 90%;
+    position: relative;
 }
 
 .result-field canvas {

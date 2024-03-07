@@ -1,13 +1,22 @@
 import React, { useEffect, useState, useRef } from 'react';
-
+import AWS from 'aws-sdk';
 import './main.css';
 
 import Scene from "app/scene"
+
+// Configure the AWS SDK with credentials
+AWS.config.update({
+    accessKeyId: import.meta.env.VITE_AWS_ACCESS_KEY_ID,
+    secretAccessKey: import.meta.env.VITE_AWS_SECRET_ACCESS_KEY,
+    region: import.meta.env.VITE_AWS_REGION
+});
 
 const Main = () => {
     const mainContainer = useRef();
     const fileInput = useRef();
     const resultField = useRef();
+    const uploadfield_tooltip = useRef();
+    const uploadbtn_tooltip = useRef();
 
     const depthMinVal = useRef();
     const depthMaxVal = useRef();
@@ -16,19 +25,61 @@ const Main = () => {
     const cxVal = useRef();
     const cyVal = useRef();
 
-    const [images, setImages] = useState([]);    
+    const [images, setImages] = useState([]);
     const [result, setResult] = useState(null);
-    const [resultRetrieved, setResultRetrieved] = useState(false);    
+    const [downloadUrl, setDownloadUrl] = useState(null);
+    const [status, setStatus] = useState("idle");  // ["idle", "processing", "completed"]
+    const [resultRetrieved, setResultRetrieved] = useState(false);
+
+    const waitResult = async (scene) => {
+        const [gltfUrl, npyUrl] = await scene.loadResult(result);
+        setDownloadUrl({ gltfUrl, npyUrl });
+    }
 
     useEffect(() => {
         if (resultRetrieved) {
             const scene = new Scene(resultField.current);
             scene.init();
-            scene.loadResult(result);
+            waitResult(scene);
         }
     }, [resultRetrieved])
 
     // =============================================================
+
+    useEffect(() => {
+        switch (status) {
+            case "idle":
+                uploadfield_tooltip.current.innerHTML = `
+                    Drop images here or click to upload
+                    <br />
+                    Only jpg, jpeg, png files are supported
+                `;
+                uploadbtn_tooltip.current.innerHTML = `
+                    Convert
+                `;
+                break;
+            case "processing":
+                uploadfield_tooltip.current.innerHTML = `
+                    Processing images...
+                    <br />
+                    Please wait...
+                `;
+                uploadbtn_tooltip.current.innerHTML = `
+                    Processing...
+                `;
+                break;
+            case "completed":
+                uploadfield_tooltip.current.innerHTML = `
+                    Loading result...
+                `;
+                uploadbtn_tooltip.current.innerHTML = `
+                    Upload again
+                `;
+                break;
+            default:
+                console.log("Unknown status");
+        }
+    }, [status])
 
     const handleFileUpload = (event) => {
         event.preventDefault();
@@ -46,6 +97,16 @@ const Main = () => {
         if (images.length === 0) {
             return alert("No images were uploaded");
         }
+
+        if (status === "processing")
+            return;
+
+        if (status === "completed") {
+            resetUpload();
+            return;
+        }
+
+        setStatus("processing");
 
         console.log(`Requesting ${images.length} images`)
 
@@ -74,26 +135,88 @@ const Main = () => {
         const projectId = 1;
 
         fetch(`http://localhost:3000/process_image/${userId}/${projectId}`, {
-        //     method: 'POST',
-        //     body: formData
-        // })
-        //     .then(response => response.arrayBuffer())  // convert the response to a Blob
-        //     .then(buffer => {
-        //         setResultRetrieved(true);
-        //         setResult(buffer);
-        //     })
-        //     .catch(error => console.error('Error:', error));
+            //     method: 'POST',
+            //     body: formData
+            // })
+            //     .then(response => response.arrayBuffer())  // convert the response to a Blob
+            //     .then(buffer => {
+            //         setResultRetrieved(true);
+            //         setResult(buffer);
+            //     })
+            //     .catch(error => console.error('Error:', error));
 
-        // fetch(`https://3dreconstruction-api.vercel.app/process_image/${userId}/${projectId}`, {
+            // fetch(`https://3dreconstruction-api.vercel.app/process_image/${userId}/${projectId}`, {
             method: 'POST',
             body: formData
         })
-            .then(response => response.arrayBuffer())  // convert the response to a Blob
-            .then(buffer => {
-                setResultRetrieved(true);
-                setResult(buffer);
+            .then(response => response.json())  // convert the response to JSON
+            .then(res => {
+                if (res.code === 200) {
+                    console.log("Reconstruction success")
+                    fetchResult();
+                }
             })
             .catch(error => console.error('Error:', error));
+    }
+
+    const s3Download = async (userData) => {
+        const s3 = new AWS.S3();
+
+        const userId = userData.userId;
+        const projectId = userData.projectId;
+
+        const userResultPath = `user-${userId}/${projectId}/output/accumulated_numpy.npy`;
+
+        const params = {
+            Bucket: import.meta.env.VITE_AWS_BUCKET_NAME,
+            Key: userResultPath,
+        }
+
+        return await s3.getObject(params).promise();
+    }
+
+    const fetchResult = async () => {
+        const params = {
+            userId: 1,
+            projectId: 1
+        }
+        console.log("Fetching result...")
+
+        try {
+            let result = await s3Download(params);
+            result = result.Body;
+            let arrayBuffer = result.buffer;
+            console.log(arrayBuffer);
+            setResultRetrieved(true);
+            setResult(arrayBuffer);
+        } catch (error) {
+            console.error('Error:', error)
+        };
+    }
+
+    const downloadResult = (type) => {
+        var link = document.createElement('a');
+        if (type === "npy") {
+            link.href = downloadUrl.npyUrl;
+            link.download = 'result.npy';
+        } else if (type === "gltf") {
+            link.href = downloadUrl.gltfUrl;
+            link.download = 'result.gltf';
+        }
+        link.click();
+    }
+
+    const resetUpload = () => {
+        setResultRetrieved(false)
+        setDownloadUrl(null);
+        setStatus("idle");
+    }
+
+    const handleClick = (event) => {
+        if (status === "processing" || status === "completed")
+            return;
+
+        fileInput.current.click()
     }
 
     const handleDragOver = (event) => {
@@ -102,6 +225,9 @@ const Main = () => {
 
     const handleDrop = (event) => {
         event.preventDefault();
+
+        if (status === "processing" || status === "completed")
+            return;
 
         let newImages = [...images];  // Create a copy of the current images
 
@@ -137,15 +263,19 @@ const Main = () => {
         setImages(newImages);
     }
 
+    // =============================================================
+    // Initialization
+    useEffect(() => {
+        setStatus("idle");
+    }, [])
+    // =============================================================
+
     return (
         <div ref={mainContainer} className='rcs-container'>
             <div className='left-content'>
                 {resultRetrieved ? (
                     <>
                         <div className='result-field' ref={resultField}></div>
-                        <div className='option-field'>
-                            <button onClick={() => setResultRetrieved(false)}>Upload again</button>
-                        </div>
                     </>
                 ) : (
                     <>
@@ -153,12 +283,9 @@ const Main = () => {
                             className='upload-field'
                             onDrop={handleDrop}
                             onDragOver={handleDragOver}
-                            onClick={() => fileInput.current.click()}
+                            onClick={handleClick}
                         >
-                            <div style={{ textAlign: 'center' }}>
-                                Drop images here or click to upload
-                                <br />
-                                Only jpg, jpeg, png files are supported
+                            <div style={{ textAlign: 'center' }} ref={uploadfield_tooltip}>
                             </div>
 
                             <input
@@ -171,11 +298,18 @@ const Main = () => {
                                 accept=".jpg,.jpeg,.png"
                             />
                         </div>
-                        <div className='option-field'>
-                            <button onClick={handleFormSubmit}>Convert now</button>
-                        </div>
                     </>
                 )}
+                <div className='option-field'>
+                    {downloadUrl && (
+                        <>
+                            <button onClick={() => downloadResult("npy")}>Download npy</button>
+                            <button onClick={() => downloadResult("gltf")}>Download glTF</button>
+                        </>
+                    )}
+                    <button onClick={fetchResult}>Result</button>
+                    <button onClick={handleFormSubmit} ref={uploadbtn_tooltip}>Convert now</button>
+                </div>
             </div>
             <div className='right-content'>
                 <div className='rcs-parameter'>

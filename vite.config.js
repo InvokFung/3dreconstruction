@@ -6,10 +6,13 @@ import { viteCommonjs, esbuildCommonjs } from '@originjs/vite-plugin-commonjs';
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/3dreconstruction/",
-  assetsInclude: ["**/*.glb", "**/*.ply"],
-  resolve:{
+  define: {
+    global: {},
+  },
+  assetsInclude: ["**/*.glb", "**/*.ply", "**/*.npy"],
+  resolve: {
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json'],
-    alias:{
+    alias: {
       "app": fileURLToPath(new URL("./src/app", import.meta.url)),
       "components": fileURLToPath(new URL("./src/components", import.meta.url)),
     },
