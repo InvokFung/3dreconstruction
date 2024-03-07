@@ -14,19 +14,14 @@
   },
   "dependencies": {
     "@originjs/vite-plugin-commonjs": "^1.0.3",
-    "aws-sdk": "^2.1571.0",
-    "browserify-zlib": "^0.2.0",
+    "aws-sdk": "^2.1572.0",
     "dat.gui": "^0.7.9",
-    "events": "^3.3.0",
     "npyjs": "^0.6.0",
-    "process": "^0.11.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.1",
-    "stream-browserify": "^3.0.0",
     "three": "^0.162.0",
-    "url": "^0.11.3",
-    "util": "^0.12.5"
+    "url": "^0.11.3"
   },
   "devDependencies": {
     "@types/react": "^18.2.55",

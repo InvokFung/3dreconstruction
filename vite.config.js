@@ -8,6 +8,10 @@ export default defineConfig({
   base: "/3dreconstruction/",
   define: {
     global: {},
+    'process.env.VITE_AWS_ACCESS_KEY_ID': JSON.stringify(process.env.VITE_AWS_ACCESS_KEY_ID),
+    'process.env.VITE_AWS_SECRET_ACCESS_KEY': JSON.stringify(process.env.VITE_AWS_SECRET_ACCESS_KEY),
+    'process.env.VITE_AWS_REGION': JSON.stringify(process.env.VITE_AWS_REGION),
+    'process.env.VITE_AWS_BUCKET_NAME': JSON.stringify(process.env.VITE_AWS_BUCKET_NAME),
   },
   assetsInclude: ["**/*.glb", "**/*.ply", "**/*.npy"],
   resolve: {
@@ -15,10 +19,6 @@ export default defineConfig({
     alias: {
       "app": fileURLToPath(new URL("./src/app", import.meta.url)),
       "components": fileURLToPath(new URL("./src/components", import.meta.url)),
-      process: "process/browser",
-      stream: "stream-browserify",
-      zlib: "browserify-zlib",
-      util: 'util'
     },
   },
   plugins: [react()],
