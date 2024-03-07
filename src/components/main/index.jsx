@@ -266,7 +266,8 @@ const Main = () => {
     // =============================================================
     // Initialization
     useEffect(() => {
-        console.log("TEST")
+        console.log("TEST2")
+        console.log(import.meta.env.VITE_AWS_BUCKET_NAME)
         console.log(process.env.VITE_AWS_ACCESS_KEY_ID)
         setStatus("idle");
     }, [])
