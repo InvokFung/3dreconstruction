@@ -24,7 +24,14 @@ jobs:
     - name: npm install
       run: |
         npm install
-        npm i @rollup/rollup-linux-x64-gnu
+        npm i @rollup/rollup-linux-x64-gnu    
+    - name: Commit files
+      run: |
+        cd $PUBLISH_DIR
+        git init
+        git config --local user.name $USER_NAME
+        git config --local user.email $USER_EMAIL
+        git status
     - name: deploy
       run: |
         npm run deploy
