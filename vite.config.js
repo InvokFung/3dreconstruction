@@ -5,7 +5,7 @@ import { viteCommonjs, esbuildCommonjs } from '@originjs/vite-plugin-commonjs';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "./",
+  base: "/3dreconstruction/",
   define: {
     global: {},
     Buffer: [],

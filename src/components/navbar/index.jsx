@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './css/Navbar.css'
 import Authentication from './sub/account';
 import Menu from './sub/menu';
 
 const Navbar = () => {
+    const navigateTo = useNavigate();
+
+    const toHome = () => {
+        navigateTo('/');
+    }
 
     return (
         <div className="navbar">
-            <a className='site-name' href="/">
+            <div className='site-name' onClick={toHome}>
                 3D Reconstruction
-            </a>
+            </div>
             <Menu></Menu>
             <Authentication></Authentication>
         </div>
