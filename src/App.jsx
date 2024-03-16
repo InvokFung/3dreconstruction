@@ -4,10 +4,10 @@ import Home from "components/Home"
 import Profile from "components/Auth/Profile"
 import Register from "components/Auth/Register"
 import Login from "components/Auth/Login"
-import NotFound from "./components/Notfound"
-import { SocketProvider } from "./utils/SocketProvider"
-import Project from "./components/Project"
-import ProjectList from "./components/ProjectList"
+import NotFound from "components/Notfound"
+import { SocketProvider } from "utils/SocketProvider"
+import Project from "components/Project"
+import ProjectList from "components/ProjectList"
 
 function App() {
   return (
