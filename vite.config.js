@@ -5,7 +5,7 @@ import { viteCommonjs, esbuildCommonjs } from '@originjs/vite-plugin-commonjs';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "./",
+  base: "/3dreconstruction/",
   define: {
     global: {},
     Buffer: [],
@@ -21,6 +21,7 @@ export default defineConfig({
     alias: {
       "app": fileURLToPath(new URL("./src/app", import.meta.url)),
       "components": fileURLToPath(new URL("./src/components", import.meta.url)),
+      "utils": fileURLToPath(new URL("./src/utils", import.meta.url)),
     },
   },
   plugins: [react()],

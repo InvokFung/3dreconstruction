@@ -1,6 +1,17 @@
+.project {
+    padding: 20px;
+}
+
+.project-header {
+    padding-bottom: 5px;
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+}
+
 .rcs-container {
-    position: fixed;
-    inset: 5%;
+    width: 90%;
+    height: 800px;
+    margin: auto;
 
     display: flex;
     border: 1px solid black;

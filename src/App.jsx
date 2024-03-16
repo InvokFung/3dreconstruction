@@ -1,16 +1,29 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Main from "components/main"
-import NotFound from "./components/main/NotFound"
+import { HashRouter, Routes, Route } from "react-router-dom"
+import { Link } from "react-router-dom"
+import Home from "components/Home"
+import Profile from "components/Auth/Profile"
+import Register from "components/Auth/Register"
+import Login from "components/Auth/Login"
+import NotFound from "./components/Notfound"
+import { SocketProvider } from "./utils/SocketProvider"
+import Project from "./components/Project"
+import ProjectList from "./components/ProjectList"
 
 function App() {
   return (
-    <BrowserRouter basename={"/3dreconstruction"}>
-      <Routes>
-        <Route path="" element={<Main />} />
-        <Route path="test" element={<Main />} />        
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    <SocketProvider>
+      <HashRouter>
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/projects" element={<ProjectList />} />
+          <Route path="/project/:projectId" element={<Project />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </HashRouter>
+    </SocketProvider>
   )
 }
 
