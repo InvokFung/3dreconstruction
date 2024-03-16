@@ -5,7 +5,6 @@ import Menu from './sub/menu';
 
 function Navbar() {
 
-
     return (
         <div className="navbar">
             <a className='site-name' href="/">
