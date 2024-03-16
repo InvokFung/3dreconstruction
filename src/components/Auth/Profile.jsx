@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/AuthPage.css'
 import { useNavigate } from 'react-router-dom';
 import useSocket from 'utils/SocketProvider';
-import Navbar from 'components/Navbar';
+import Navbar from 'components/Navgbar';
 
 const Profile = () => {
     const {

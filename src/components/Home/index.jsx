@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import './css/Home.css';
 import { useNavigate } from 'react-router-dom';
 import useSocket from 'utils/SocketProvider';
-import Navbar from 'components/Navbar';
+import Navbar from 'components/Navgbar';
 
 const Main = () => {
     const {

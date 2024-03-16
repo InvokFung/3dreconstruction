@@ -3,7 +3,7 @@ import './css/Project.css';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import useSocket from 'utils/SocketProvider';
-import Navbar from 'components/Navbar';
+import Navbar from 'components/Navgbar';
 
 import Scene from "app/scene"
 
