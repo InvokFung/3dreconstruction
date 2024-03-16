@@ -1,13 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
 import './css/ProjectList.css';
-
-import Scene from "app/scene"
-
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { useNavigate } from 'react-router-dom';
 import useSocket from 'utils/SocketProvider';
-import Navbar from '../Navbar';
+import Navbar from 'components/Navbar';
 
 const ProjectList = () => {
     const {

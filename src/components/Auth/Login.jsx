@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../Navbar';
+import Navbar from 'components/Navbar';
 import useSocket from 'utils/SocketProvider';
-
-const baseName = "/3dreconstruction"
 
 const Login = () => {
     const {
