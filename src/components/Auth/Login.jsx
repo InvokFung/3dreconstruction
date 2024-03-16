@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-import Navbar from 'components/Navbar';
+import Navbar from 'components/Navgbar';
 import useSocket from 'utils/SocketProvider';
 
 const Login = () => {
