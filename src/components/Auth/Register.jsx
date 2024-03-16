@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Navbar from '../Navbar';
+import Navbar from 'components/Navbar';
 import useSocket from 'utils/SocketProvider';
 
 const Register = () => {
