@@ -5,7 +5,7 @@ import { viteCommonjs, esbuildCommonjs } from '@originjs/vite-plugin-commonjs';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/3dreconstruction/",
+  base: "./",
   define: {
     global: {},
     Buffer: [],
@@ -30,5 +30,5 @@ export default defineConfig({
         esbuildCommonjs(['when']),
       ],
     },
-  }
+  },
 })
