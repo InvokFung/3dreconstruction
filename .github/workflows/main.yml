@@ -27,7 +27,7 @@ jobs:
         npm i @rollup/rollup-linux-x64-gnu
     - name: npm run build
       run: |
-        npm run deploy
+        npm run build
     - name: Commit files
       run: |
         cd $PUBLISH_DIR
