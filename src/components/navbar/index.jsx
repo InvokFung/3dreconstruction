@@ -3,7 +3,7 @@ import './css/Navbar.css'
 import Authentication from './sub/account';
 import Menu from './sub/menu';
 
-function Navbar() {
+const Navbar = () => {
 
     return (
         <div className="navbar">
