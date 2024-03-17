@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import './css/Navbar.css'
 import Authentication from './sub/account';
 import Menu from './sub/menu';
+import "./css/home.css";
+import "./css/style.css";
 
 const Navbar = () => {
     const navigateTo = useNavigate();
@@ -12,10 +14,8 @@ const Navbar = () => {
     }
 
     return (
-        <div className="navbar">
-            <div className='site-name' onClick={toHome}>
-                3D Reconstruction
-            </div>
+        <div className="navbar-container">
+            <span className="logo logo-white" onClick={toHome}>RECONSTRUCT</span>            
             <Menu></Menu>
             <Authentication></Authentication>
         </div>

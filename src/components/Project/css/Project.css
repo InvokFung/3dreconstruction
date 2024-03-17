@@ -6,6 +6,32 @@
     padding-bottom: 5px;
     border-bottom: 1px solid black;
     margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.project-image-container,
+.project-viewport-container {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+}
+
+.image-container {
+    height: 100px;
+    border: 1px solid black;
+    overflow: auto;
+}
+
+.image-box {
+    display: inline-block;
+    margin: 5px;
+}
+
+.image-container img {
+    height: 50px;
+    width: auto;
 }
 
 .rcs-container {

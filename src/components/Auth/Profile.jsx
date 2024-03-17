@@ -35,8 +35,10 @@ const Profile = () => {
         <>
             <Navbar></Navbar>
             <div className='profile-container'>
-                < h2>Welcome, {username}!</h2>
-                <button className="btn btn-primary" onClick={viewProjectList}>View your projects</button>
+                <div className='profile'>
+                    < h2>Welcome, {username}!</h2>
+                    <button className="btn btn-primary" onClick={viewProjectList}>View your projects</button>
+                </div>
             </div>
         </>
     )

@@ -67,42 +67,44 @@ const Register = () => {
         <>
             <Navbar></Navbar>
             <div className="authPage-container">
-                {authenticated ? (
-                    <div>
-                        < h2>Welcome, {username}!</h2>
-                        <button className="btn btn-primary">Logout</button>
-                    </div>
-                ) : (
-                    <>
-                        <form onSubmit={handleRegister}>
-                            <h2>Sign-up</h2>
-                            <div className="form-group">
-                                <label>Username</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    value={username}
-                                    onChange={e => setUsername(e.target.value)}
-                                    placeholder='Enter your username here'
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Password</label>
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    value={password}
-                                    onChange={e => setPassword(e.target.value)}
-                                    placeholder='Enter your password here'
-                                    required
-                                />
-                            </ div>
-                            <button type="submit" id="submit-btn" className="btn btn-primary">Register</button>
-                        </form>
-                        <button onClick={() => navigateTo('/login')}>Already have an account? Login now</button>
-                    </>
-                )}
+                <div className="register-form">
+                    {authenticated ? (
+                        <div>
+                            < h2>Welcome, {username}!</h2>
+                            <button className="btn btn-primary">Logout</button>
+                        </div>
+                    ) : (
+                        <>
+                            <form onSubmit={handleRegister}>
+                                <h2>Sign-up</h2>
+                                <div className="form-group">
+                                    <label>Username</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={username}
+                                        onChange={e => setUsername(e.target.value)}
+                                        placeholder='Enter your username here'
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Password</label>
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        value={password}
+                                        onChange={e => setPassword(e.target.value)}
+                                        placeholder='Enter your password here'
+                                        required
+                                    />
+                                </ div>
+                                <button type="submit" id="submit-btn" className="btn btn-primary">Register</button>
+                            </form>
+                            <button onClick={() => navigateTo('/login')}>Already have an account? Login now</button>
+                        </>
+                    )}
+                </div>
             </div>
         </>
     )

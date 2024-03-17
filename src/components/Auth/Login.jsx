@@ -15,7 +15,7 @@ const Login = () => {
         setAuthChecked,
         controllerRef
     } = useSocket();
-    
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -53,7 +53,7 @@ const Login = () => {
                     username: username,
                     authToken: data.authToken
                 }
-                updateUserData(userData);                
+                updateUserData(userData);
             } else {
                 alert('Invalid username or password');
             }
@@ -76,42 +76,44 @@ const Login = () => {
         <>
             <Navbar></Navbar>
             <div className="authPage-container">
-                {authenticated ? (
-                    <div>
-                        < h2>Welcome, {username}!</h2>
-                        <button className="btn btn-primary" onClick={handleLogout}>Logout</button>
-                    </div>
-                ) : (
-                    <>
-                        <form onSubmit={handleLogin}>
-                            <h2>Login</h2>
-                            <div className="form-group">
-                                <label>Username</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    value={username}
-                                    onChange={e => setUsername(e.target.value)}
-                                    placeholder='Enter your username here'
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Password</label>
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    value={password}
-                                    onChange={e => setPassword(e.target.value)}
-                                    placeholder='Enter your password here'
-                                    required
-                                />
-                            </ div>
-                            <button type="submit" id="submit-btn" className="btn btn-primary">Login</button>
-                        </form>
-                        <button onClick={() => navigateTo('/register')}>Not registered yet? Sign-up now</button>
-                    </>
-                )}
+                <div class='login-form'>
+                    {authenticated ? (
+                        <div>
+                            < h2>Welcome, {username}!</h2>
+                            <button className="btn btn-primary" onClick={handleLogout}>Logout</button>
+                        </div>
+                    ) : (
+                        <>
+                            <form onSubmit={handleLogin}>
+                                <h2>Login</h2>
+                                <div className="form-group">
+                                    <label>Username</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={username}
+                                        onChange={e => setUsername(e.target.value)}
+                                        placeholder='Enter your username here'
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Password</label>
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        value={password}
+                                        onChange={e => setPassword(e.target.value)}
+                                        placeholder='Enter your password here'
+                                        required
+                                    />
+                                </ div>
+                                <button type="submit" id="submit-btn" className="btn btn-primary">Login</button>
+                            </form>
+                            <button onClick={() => navigateTo('/register')}>Not registered yet? Sign-up now</button>
+                        </>
+                    )}
+                </div>
             </div>
         </>
     )

@@ -166,20 +166,17 @@ const Reconstruction = () => {
         const source = new EventSource(`http://localhost:3000/process_image/${userId}/${projectId}`);
 
         source.onerror = function (error) {
-            if (this.readyState == EventSource.CLOSED) {
-                console.log('EventSource connection was closed');
-            } else {
-                console.log('EventSource connection error');
-                console.error(error)
-            }
-            source.close();
-            resetUpload();
+            console.log('EventSource connection error');
+            console.error(error)
         };
 
         await new Promise((resolve, reject) => {
             source.onmessage = function (event) {
                 if (event.data === 'READY') {
                     resolve(source);
+                } else if (event.data === 'CLOSE') {
+                    source.close();
+                    resetUpload();
                 } else {
                     console.log(`Progress: ${event.data}%`);
                 }
@@ -352,110 +349,134 @@ const Reconstruction = () => {
         <>
             <Navbar></Navbar>
             <div className="project">
-                <div className='project-header'>Project {projectId}</div>
-                <div ref={mainContainer} className='rcs-container'>
-                    <div className='left-content'>
-                        {resultRetrieved ? (
-                            <>
-                                <div className='result-field' ref={resultField}></div>
-                            </>
-                        ) : (
-                            <>
+                <div className='project-header'>Project {projectId} - New Project</div>
+                <div className='project-image-container'>
+                    <h4>Images</h4>
+                    <div className="image-container">
+                        {images.map((image, index) => (
+                            <div className="image-box" key={index} style={{ position: 'relative' }}>
+                                <img
+                                    src={URL.createObjectURL(image)}
+                                    alt={`Uploaded Image ${index}`}
+                                    className='uploaded-image'
+                                />
                                 <div
-                                    className='upload-field'
-                                    onDrop={handleDrop}
-                                    onDragOver={handleDragOver}
-                                    onClick={handleClick}
+                                    onClick={() => handleRemoveImage(index)}
+                                    className='remove-image-btn'
+                                    title="Remove image"
                                 >
-                                    <div style={{ textAlign: 'center' }} ref={uploadfield_tooltip}>
-                                    </div>
-
-                                    <input
-                                        ref={fileInput}
-                                        type="file"
-                                        onChange={handleFileUpload}
-                                        onClick={(event) => event.target.value = null}
-                                        className='file-input'
-                                        multiple
-                                        accept=".jpg,.jpeg,.png"
-                                    />
+                                    X
                                 </div>
-                            </>
-                        )}
-                        <div className='option-field'>
-                            {downloadUrl && (
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className='project-viewport-container'>
+                    <h4>3D Viewport</h4>
+                    <div ref={mainContainer} className='rcs-container'>
+                        <div className='left-content'>
+                            {resultRetrieved ? (
                                 <>
-                                    <button onClick={() => downloadResult("npy")}>Download npy</button>
-                                    <button onClick={() => downloadResult("gltf")}>Download glTF</button>
+                                    <div className='result-field' ref={resultField}></div>
+                                </>
+                            ) : (
+                                <>
+                                    <div
+                                        className='upload-field'
+                                        onDrop={handleDrop}
+                                        onDragOver={handleDragOver}
+                                        onClick={handleClick}
+                                    >
+                                        <div style={{ textAlign: 'center' }} ref={uploadfield_tooltip}>
+                                        </div>
+
+                                        <input
+                                            ref={fileInput}
+                                            type="file"
+                                            onChange={handleFileUpload}
+                                            onClick={(event) => event.target.value = null}
+                                            className='file-input'
+                                            multiple
+                                            accept=".jpg,.jpeg,.png"
+                                        />
+                                    </div>
                                 </>
                             )}
-                            <button onClick={fetchResult}>Result</button>
-                            <button onClick={handleFormSubmit} ref={uploadbtn_tooltip}>Convert now</button>
+                            <div className='option-field'>
+                                {downloadUrl && (
+                                    <>
+                                        <button onClick={() => downloadResult("npy")}>Download npy</button>
+                                        <button onClick={() => downloadResult("gltf")}>Download glTF</button>
+                                    </>
+                                )}
+                                <button onClick={fetchResult}>Result</button>
+                                <button onClick={handleFormSubmit} ref={uploadbtn_tooltip}>Convert now</button>
+                            </div>
                         </div>
-                    </div>
-                    <div className='right-content'>
-                        <div className='rcs-parameter'>
-                            <div className='rp-header'>Parameters</div>
-                            <div className='rp-content'>
-                                <div className='rp-item'>
-                                    <div>Object Depth</div>
-                                    <div className='multiInput'>
-                                        <div className='halfText'>
-                                            <label>min</label>
-                                            <input className='halfInput' type='number' step="0.01" ref={depthMinVal} defaultValue={0} />
-                                        </div>
-                                        <div className='halfText'>
-                                            <label>max</label>
-                                            <input className='halfInput' type='number' step="0.01" ref={depthMaxVal} defaultValue={0} />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='rp-item'>
-                                    <div>Camera focal length</div>
-                                    <div className='multiInput'>
-                                        <div className='halfText'>
-                                            <label>fx</label>
-                                            <input className='halfInput' type='number' step="0.01" ref={fxVal} defaultValue={0} />
-                                        </div>
-                                        <div className='halfText'>
-                                            <label>fy</label>
-                                            <input className='halfInput' type='number' step="0.01" ref={fyVal} defaultValue={0} />
+                        <div className='right-content'>
+                            <div className='rcs-parameter'>
+                                <div className='rp-header'>Parameters</div>
+                                <div className='rp-content'>
+                                    <div className='rp-item'>
+                                        <div>Object Depth</div>
+                                        <div className='multiInput'>
+                                            <div className='halfText'>
+                                                <label>min</label>
+                                                <input className='halfInput' type='number' step="0.01" ref={depthMinVal} defaultValue={0} />
+                                            </div>
+                                            <div className='halfText'>
+                                                <label>max</label>
+                                                <input className='halfInput' type='number' step="0.01" ref={depthMaxVal} defaultValue={0} />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className='rp-item'>
-                                    <div>Image center position</div>
-                                    <div className='multiInput'>
-                                        <div className='halfText'>
-                                            <label>cx</label>
-                                            <input className='halfInput' type='number' step="0.01" ref={cxVal} defaultValue={0} />
+                                    <div className='rp-item'>
+                                        <div>Camera focal length</div>
+                                        <div className='multiInput'>
+                                            <div className='halfText'>
+                                                <label>fx</label>
+                                                <input className='halfInput' type='number' step="0.01" ref={fxVal} defaultValue={0} />
+                                            </div>
+                                            <div className='halfText'>
+                                                <label>fy</label>
+                                                <input className='halfInput' type='number' step="0.01" ref={fyVal} defaultValue={0} />
+                                            </div>
                                         </div>
-                                        <div className='halfText'>
-                                            <label>cy</label>
-                                            <input className='halfInput' type='number' step="0.01" ref={cyVal} defaultValue={0} />
+                                    </div>
+                                    <div className='rp-item'>
+                                        <div>Image center position</div>
+                                        <div className='multiInput'>
+                                            <div className='halfText'>
+                                                <label>cx</label>
+                                                <input className='halfInput' type='number' step="0.01" ref={cxVal} defaultValue={0} />
+                                            </div>
+                                            <div className='halfText'>
+                                                <label>cy</label>
+                                                <input className='halfInput' type='number' step="0.01" ref={cyVal} defaultValue={0} />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className='uploaded-gallery'>
-                            <div className='ug-header'>Uploaded Images</div>
-                            {images.map((image, index) => (
-                                <div key={index} style={{ position: 'relative' }}>
-                                    <img
-                                        src={URL.createObjectURL(image)}
-                                        alt={`Uploaded Image ${index}`}
-                                        className='uploaded-image'
-                                    />
-                                    <div
-                                        onClick={() => handleRemoveImage(index)}
-                                        className='remove-image-btn'
-                                        title="Remove image"
-                                    >
-                                        X
+                            <div className='uploaded-gallery'>
+                                <div className='ug-header'>Uploaded Images</div>
+                                {images.map((image, index) => (
+                                    <div key={index} style={{ position: 'relative' }}>
+                                        <img
+                                            src={URL.createObjectURL(image)}
+                                            alt={`Uploaded Image ${index}`}
+                                            className='uploaded-image'
+                                        />
+                                        <div
+                                            onClick={() => handleRemoveImage(index)}
+                                            className='remove-image-btn'
+                                            title="Remove image"
+                                        >
+                                            X
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

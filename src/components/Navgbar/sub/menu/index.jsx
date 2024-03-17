@@ -22,14 +22,19 @@ function Menu() {
     };
 
     return (
-        <div className="menu-container">
-            {(authChecked && authenticated) ? (
-                <>
-                    <div className='menuItem' onClick={viewProjectList}>
-                        projectList
-                    </div>
-                </>
-            ) : (<></>)}
+        <div className="menu-container home-desktop-menu">
+            <nav className="home-links">
+                <span className="menuItem bodySmall" onClick={() => navigateTo("/")}>Home</span>
+                {(authChecked && authenticated) ? (
+                    <>
+                        <div className='menuItem bodySmall' onClick={viewProjectList}>
+                            Projects
+                        </div>
+                    </>
+                ) : (<></>)}
+                <span className="menuItem bodySmall">Tutorial</span>
+                <span className="menuItem bodySmall">Gallery</span>
+            </nav>
         </div>
     );
 }

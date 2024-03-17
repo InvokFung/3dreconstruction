@@ -22,10 +22,6 @@ function Authentication() {
         navigateTo('/profile');
     };
 
-    const handleLogin = (event) => {
-        navigateTo('/login');
-    };
-
     const handleLogout = () => {
         updateUserData(null);
     };
@@ -37,10 +33,13 @@ function Authentication() {
                     <div className='account' onClick={viewProfile}>
                         <div>{username}</div>
                     </div>
-                    <div className="btn btn-primary" onClick={handleLogout}>Logout</div>
+                    <div className="buttonFilled btn" onClick={handleLogout}>Logout</div>
                 </>
             ) : (
-                <div className='btn' onClick={handleLogin}>Login</div>
+                <div className="home-buttons">
+                    <button className="home-login buttonFlat" onClick={() => navigateTo("/login")}>Login</button>
+                    <button className="buttonFilled" onClick={() => navigateTo("/register")}>Register</button>
+                </div>
             )}
         </div>
     );
