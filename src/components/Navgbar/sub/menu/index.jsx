@@ -32,8 +32,10 @@ function Menu() {
                         </div>
                     </>
                 ) : (<></>)}
-                <span className="menuItem bodySmall">Tutorial</span>
+                <span className="menuItem bodySmall">Guide</span>
                 <span className="menuItem bodySmall">Gallery</span>
+                <span className="menuItem bodySmall">FAQ</span>
+                <span className="menuItem bodySmall">Contact</span>
             </nav>
         </div>
     );

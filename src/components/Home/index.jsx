@@ -248,55 +248,14 @@ const Main = () => {
                         </span>
                         <button className="buttonFilled">Learn More</button>
                     </div>
-                </div>
-                <div className="home-faq">
-                    <div className="faqContainer">
-                        <div className="home-faq1">
-                            <div className="home-container28">
-                                <span className="overline">
-                                    <span>FAQ</span>
-                                    <br></br>
-                                </span>
-                                <h2 className="home-text84 heading2">Common questions</h2>
-                                <span className="home-text85 bodyLarge">
-                                    <span>
-                                        Here are some of the most common questions that we get.
-                                    </span>
-                                    <br></br>
-                                </span>
-                            </div>
-                            <div className="home-container29">
-                                {/* <Question1
-                answer="Image to 3D reconstruction is the process of creating a three-dimensional model from a two-dimensional image or set of images."
-                question="What is image to 3D reconstruction?"
-              ></Question1>
-              <Question1
-                answer="Image to 3D reconstruction works by using computer vision algorithms to analyze the image(s) and create a depth map that represents the spatial information in the scene. This depth map is then used to generate a 3D model."
-                question="How does image to 3D reconstruction work?"
-              ></Question1>
-              <Question1
-                answer="Image to 3D reconstruction has various applications including virtual reality, augmented reality, medical imaging, cultural heritage preservation, and more."
-                question="What are the applications of image to 3D reconstruction?"
-              ></Question1>
-              <Question1
-                answer="The accuracy of image to 3D reconstruction depends on various factors such as the quality of the input images, the algorithms used, and the expertise of the user. In general, modern techniques can achieve high levels of accuracy."
-                question="Is image to 3D reconstruction accurate?"
-              ></Question1>
-              <Question1
-                answer="While there are user-friendly image to 3D reconstruction software available, some level of technical knowledge and expertise is usually required to achieve optimal results."
-                question="Can anyone use image to 3D reconstruction software?"
-              ></Question1> */}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </div>                
                 <div className="home-footer">
                     <footer className="footerContainer home-footer1">
                         <div className="home-container30">
                             <span className="logo">RECONSTRUCT</span>
                             <nav className="home-nav1">
                                 <span className="bodySmall">Home</span>
-                                <span className="home-nav222 bodySmall">How It Works</span>
+                                <span className="home-nav222 bodySmall">Guide</span>
                                 <span className="home-nav322 bodySmall">Gallery</span>
                                 <span className="home-nav422 bodySmall">FAQ</span>
                                 <span className="home-nav522 bodySmall">Contact</span>

@@ -409,8 +409,8 @@ const Reconstruction = () => {
                                         <button onClick={() => downloadResult("gltf")}>Download glTF</button>
                                     </>
                                 )}
-                                <button onClick={fetchResult}>Result</button>
-                                <button onClick={handleFormSubmit} ref={uploadbtn_tooltip}>Convert now</button>
+                                <button className="redirect" onClick={fetchResult}>Result</button>
+                                <button className="redirect" onClick={handleFormSubmit} ref={uploadbtn_tooltip}>Convert now</button>
                             </div>
                         </div>
                         <div className='right-content'>

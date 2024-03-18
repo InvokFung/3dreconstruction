@@ -111,12 +111,12 @@ const ProjectList = () => {
                                 <td>{project.projectName}</td>
                                 <td>{project.projectDate}</td>
                                 <td>{project.projectStatus}</td>
-                                <td><button onClick={() => viewProject(project.projectId)}>View</button></td>
+                                <td><button className='redirect' onClick={() => viewProject(project.projectId)}>View</button></td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-                <button onClick={createProject}>Create Project</button>
+                <button className="redirect" onClick={createProject}>Create Project</button>
             </div>
         </>
     )

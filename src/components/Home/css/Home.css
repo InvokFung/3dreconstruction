@@ -1,3 +1,27 @@
 .home-container {
     padding: 20px;
 }
+
+.home-hero {
+    flex: 0 0 auto;
+    width: 100%;
+    height: auto;
+    display: flex;
+    margin: 100px 0;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.bannerContainer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-top: var(--dl-space-space-sixunits);
+    padding-left: var(--dl-space-space-fiveunits);
+    padding-right: var(--dl-space-space-fiveunits);
+    flex-direction: column;
+    padding-bottom: var(--dl-space-space-sixunits);
+    justify-content: space-between;
+    background-color: var(--accent-color);
+    color: #FFFFFF;
+  }

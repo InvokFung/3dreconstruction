@@ -110,7 +110,7 @@ const Login = () => {
                                 </ div>
                                 <button type="submit" id="submit-btn" className="btn btn-primary">Login</button>
                             </form>
-                            <button onClick={() => navigateTo('/register')}>Not registered yet? Sign-up now</button>
+                            <button className="redirect" onClick={() => navigateTo('/register')}>Not registered yet? Sign-up now</button>
                         </>
                     )}
                 </div>

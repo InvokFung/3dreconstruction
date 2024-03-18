@@ -11,6 +11,12 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --main-color: #5D576B;
+  --secondary-color: #FCF7F8;
+  --shadow-color: #CED3DC;
+  --accent-color: #a5a2c0;
+  --highlight-color: #EF5B5B;
 }
 
 * {
@@ -54,7 +60,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: rgba(230, 230, 230, 0.8);
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -66,6 +72,29 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.buttonFlat {
+  color: #000000;
+  font-family: Lato;
+  font-weight: bold;
+  padding: 8px 24px;
+}
+
+.buttonFilled {
+  color: var(--dl-color-custom-neutral-light);
+  transition: 0.3s;
+  font-family: Lato;
+  font-weight: bold;
+  padding-top: var(--dl-space-space-halfunit);
+  padding-left: var(--dl-space-space-oneandhalfunits);
+  padding-right: var(--dl-space-space-oneandhalfunits);
+  padding-bottom: var(--dl-space-space-halfunit);
+  background-color: var(--highlight-color);
+}
+
+.buttonFilled:hover {
+  background-color: var(--dl-color-custom-primary2);
 }
 
 @media (prefers-color-scheme: light) {
@@ -81,4 +110,8 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+#root {
+  min-height: 100vh;
 }

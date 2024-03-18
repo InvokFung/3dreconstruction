@@ -101,7 +101,7 @@ const Register = () => {
                                 </ div>
                                 <button type="submit" id="submit-btn" className="btn btn-primary">Register</button>
                             </form>
-                            <button onClick={() => navigateTo('/login')}>Already have an account? Login now</button>
+                            <button className="redirect" onClick={() => navigateTo('/login')}>Already have an account? Login now</button>
                         </>
                     )}
                 </div>
