@@ -49,12 +49,8 @@ const Register = () => {
             const data = await response.json();
 
             if (data.status === 200) {
-                console.log(`Registered as ${username} successfully.`)
-                const userData = {
-                    username: username,
-                    authToken: data.authToken
-                }
-                updateUserData(userData);
+                console.log(`Registered as ${username} successfully.`)               
+                updateUserData(data);
             } else {
                 alert('Username already exist, please try another username');
             }

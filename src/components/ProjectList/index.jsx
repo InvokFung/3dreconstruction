@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './css/ProjectList.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSocket from 'utils/SocketProvider';
 import Navbar from 'components/Navgbar';
 
@@ -16,6 +16,7 @@ const ProjectList = () => {
         controllerRef
     } = useSocket();
 
+    const { projectId } = useParams();
     const [projectList, setProjectList] = useState([]);
     const navigateTo = useNavigate();
 
@@ -32,9 +33,11 @@ const ProjectList = () => {
             controllerRef.current.abort();
 
         controllerRef.current = new AbortController();
+        
+        const userId = userData.userId;
 
         try {
-            const projectUrl = `http://localhost:3000/projects/${userData.username}`;
+            const projectUrl = `http://localhost:3000/getProjects/${userId}`;
             const response = await fetch(projectUrl, {
                 method: 'GET',
                 headers: {
@@ -43,6 +46,7 @@ const ProjectList = () => {
                 signal: controllerRef.current.signal
             });
             const data = await response.json();
+            console.log(data)
             if (data.status === 200) {
                 setProjectList(data.projects);
             } else {
@@ -58,14 +62,14 @@ const ProjectList = () => {
             controllerRef.current.abort();
 
         controllerRef.current = new AbortController();
+        console.log(userData)
 
         try {
             const projectData = {
                 projectName: 'New Project',
-                projectStatus: 'idle',
-                projectOwner: userData.username
+                projectOwner: userData.userId
             }
-            const projectUrl = `http://localhost:3000/create_project/`;
+            const projectUrl = `http://localhost:3000/createProject/`;
             const response = await fetch(projectUrl, {
                 method: 'POST',
                 headers: {

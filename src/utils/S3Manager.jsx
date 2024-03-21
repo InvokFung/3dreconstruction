@@ -53,7 +53,11 @@ export default function useSocket() {
             const data = await reponse.json();
             if (data.status === 200) {
                 console.log("User is logged in as:", username)
-                updateUserData(data);
+                const userData = {
+                    username,
+                    authToken
+                }
+                updateUserData(userData);
             } else {
                 // Remove token from localStorage
                 console.log("Invalid auth token found")
@@ -66,19 +70,15 @@ export default function useSocket() {
 
     const updateUserData = (userData) => {
         if (userData) {
-            const { authToken, userId, username } = userData;
-            const savedData = { authToken, userId, username };
-            setUserData(savedData);
+            setUserData(userData);
             // Save login state to localStorage
-            localStorage.setItem('authToken', authToken)
-            localStorage.setItem('userId', userId);
-            localStorage.setItem('username', username);
+            localStorage.setItem('authToken', userData.authToken)
+            localStorage.setItem('username', userData.username);
             setAuthenticated(true);
         } else {
             setUserData({});
             // Clear login state from localStorage
             localStorage.removeItem('authToken');
-            localStorage.removeItem('userId');
             localStorage.removeItem('username');
             setAuthenticated(false);
         }

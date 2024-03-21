@@ -49,11 +49,7 @@ const Login = () => {
             const data = await response.json();
             if (data.status === 200) {
                 console.log(`Login as ${username} successfully.`)
-                const userData = {
-                    username: username,
-                    authToken: data.authToken
-                }
-                updateUserData(userData);
+                updateUserData(data);
             } else {
                 alert('Invalid username or password');
             }
@@ -63,20 +59,15 @@ const Login = () => {
     }
 
     const handleLogout = () => {
-        setAuthenticated(false);
-        setUsername('');
-        setPassword('');
-
-        // Clear login state from localStorage
-        localStorage.removeItem('username');
-        localStorage.removeItem('password');
+        // Remove token from localStorage
+        updateUserData(null);
     };
 
     return (
         <>
             <Navbar></Navbar>
             <div className="authPage-container">
-                <div class='login-form'>
+                <div className='login-form'>
                     {authenticated ? (
                         <div>
                             < h2>Welcome, {username}!</h2>
