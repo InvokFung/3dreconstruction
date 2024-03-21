@@ -6,7 +6,7 @@ import useSocket from 'utils/SocketProvider';
 import Navbar from 'components/Navgbar';
 
 import ProjectUpload from './sub/ProjectUpload';
-import ProjectPreset from './sub/ProjectPreset';
+import ProjectConfig from './sub/ProjectConfig';
 import ProjectProgress from './sub/ProjectProgress';
 import ProjectResult from './sub/ProjectResult';
 import ProjectSetting from './sub/ProjectSetting';
@@ -43,19 +43,21 @@ const Reconstruction = () => {
                 signal: controllerRef.current.signal
             });
             const data = await response.json();
+            console.log(data)
             if (data.status === 200) {
                 const projectStatus = data.projectStatus;
-                switch(projectStatus) {
+                switch (projectStatus) {
                     case "idle":
                         setStage(1);
                         break;
                     case "config":
                         setStage(2);
                         break;
-                    case "progress":
+                    case "processing":
                         setStage(3);
                         break;
                     case "completed":
+                    case "error":
                         setStage(4);
                         break;
                 }
@@ -95,7 +97,7 @@ const Reconstruction = () => {
             <Navbar></Navbar>
             <div className="project">
                 {stage == 1 && (<ProjectUpload props={childProps}></ProjectUpload>)}
-                {stage == 2 && (<ProjectPreset props={childProps}></ProjectPreset>)}
+                {stage == 2 && (<ProjectConfig props={childProps}></ProjectConfig>)}
                 {stage == 3 && (<ProjectProgress props={childProps}></ProjectProgress>)}
                 {stage == 4 && (
                     <>

@@ -185,7 +185,7 @@ const ProjectSetting = () => {
         fetch(`http://localhost:3000/process_image/${userId}/${projectId}`, {
             // fetch(`https://3dreconstruction-api.vercel.app/process_image/${userId}/${projectId}`, {
             method: 'POST',
-            body: formData
+            body: formData            
         })
             .then(response => response.json())  // convert the response to JSON
             .then(res => {

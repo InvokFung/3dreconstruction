@@ -96,8 +96,40 @@ const ProjectUpload = ({ props }) => {
         event.returnValue = true;
     }
 
-    const gotoNextStage = () => {
-        setStage(2);
+    const gotoNextStage = async () => {
+        if (controllerRef.current)
+            controllerRef.current.abort();
+
+        controllerRef.current = new AbortController();
+
+        const userId = userData.userId;
+        const action = "add";
+
+        const formData = new FormData();
+        formData.append('userId', userId);
+        formData.append('projectId', projectId);
+        formData.append('action', action);
+
+        images.forEach((image, index) => {
+            formData.append('images', image, image.name);
+        });
+
+        try {
+            const projectUrl = `http://localhost:3000/projectUpload`;
+            const response = await fetch(projectUrl, {
+                method: "POST",
+                body: formData,
+                signal: controllerRef.current.signal
+            });
+            const data = await response.json();
+            if (data.status === 200) {                
+                setStage(2);
+            } else {
+                alert('Failed to load projects');
+            }
+        } catch (error) {
+            console.log(error);
+        }        
     }
 
     useEffect(() => {

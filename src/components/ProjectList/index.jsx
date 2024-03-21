@@ -89,6 +89,11 @@ const ProjectList = () => {
         }
     }
 
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+    }
+
     const viewProject = (projectId) => {
         navigateTo(`/project/${projectId}`);
     }
@@ -113,7 +118,7 @@ const ProjectList = () => {
                             <tr key={index}>
                                 <td>{project.projectId}</td>
                                 <td>{project.projectName}</td>
-                                <td>{project.projectDate}</td>
+                                <td>{formatDate(project.projectDate)}</td>
                                 <td>{project.projectStatus}</td>
                                 <td><button className='redirect' onClick={() => viewProject(project.projectId)}>View</button></td>
                             </tr>

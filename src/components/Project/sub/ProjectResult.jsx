@@ -9,7 +9,14 @@ import Scene from "app/scene"
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 
 
-const ProjectResult = () => {
+const ProjectResult = ({ props }) => {
+    const {
+        stage,
+        setStage,
+        page,
+        setPage,
+    } = props;
+
     const {
         authenticated,
         setAuthenticated,
@@ -24,12 +31,37 @@ const ProjectResult = () => {
     const { projectId } = useParams();
     const navigateTo = useNavigate();
 
+    const getProjectDetails = async () => {
+        if (controllerRef.current)
+            controllerRef.current.abort();
+
+        controllerRef.current = new AbortController();
+
+        const userId = userData.userId;
+        const detailName = "full";
+
+        try {
+            const projectUrl = `http://localhost:3000/getProjectDetails/${userId}/${projectId}?detail=${detailName}`;
+            const response = await fetch(projectUrl, {
+                method: 'GET',
+                signal: controllerRef.current.signal
+            });
+            const data = await response.json();
+            console.log(data)
+            if (data.status === 200) {
+                setProjectData(data.project);
+            } else {
+                alert('Failed to load project details');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
     useEffect(() => {
-        if (authChecked && !authenticated) {
-            navigateTo('/login');
-        } else if (authChecked && authenticated) {
-            console.log("Starting app...")
-            console.log(import.meta.env.VITE_AWS_ACCESS_KEY_ID)
+        if (authChecked && authenticated) {
+            getProjectDetails();
         }
 
         return () => {
@@ -56,6 +88,7 @@ const ProjectResult = () => {
 
     const sceneRef = useRef(null);
 
+    const [projectData, setProjectData] = useState({})
     const [images, setImages] = useState([]);
     const [result, setResult] = useState(null);
     const [downloadUrl, setDownloadUrl] = useState(null);
@@ -336,12 +369,36 @@ const ProjectResult = () => {
         }
     }, [resultRetrieved])
 
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+    }
+
     // =============================================================
 
     return (
         <>
             <div className="project">
                 <div className='project-header'>Project {projectId} - New Project</div>
+                <div>Project details</div>
+                <table className="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Project Id</th>
+                            <th>Project Name</th>
+                            <th>Create Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{projectData.projectId}</td>
+                            <td>{projectData.projectName}</td>
+                            <td>{formatDate(projectData.projectDate)}</td>
+                            <td>{projectData.projectStatus}</td>
+                        </tr>
+                    </tbody>
+                </table>
                 <div className='project-viewport-container'>
                     <h4>Result Viewport</h4>
                     <div ref={mainContainer} className='rcs-container'>
@@ -384,75 +441,10 @@ const ProjectResult = () => {
                                 <button onClick={handleFormSubmit} ref={uploadbtn_tooltip}>Convert now</button>
                             </div>
                         </div>
-                        <div className='right-content'>
-                            <div className='rcs-parameter'>
-                                <div className='rp-header'>Parameters</div>
-                                <div className='rp-content'>
-                                    <div className='rp-item'>
-                                        <div>Object Depth</div>
-                                        <div className='multiInput'>
-                                            <div className='halfText'>
-                                                <label>min</label>
-                                                <input className='halfInput' type='number' step="0.01" ref={depthMinVal} defaultValue={0} />
-                                            </div>
-                                            <div className='halfText'>
-                                                <label>max</label>
-                                                <input className='halfInput' type='number' step="0.01" ref={depthMaxVal} defaultValue={0} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='rp-item'>
-                                        <div>Camera focal length</div>
-                                        <div className='multiInput'>
-                                            <div className='halfText'>
-                                                <label>fx</label>
-                                                <input className='halfInput' type='number' step="0.01" ref={fxVal} defaultValue={0} />
-                                            </div>
-                                            <div className='halfText'>
-                                                <label>fy</label>
-                                                <input className='halfInput' type='number' step="0.01" ref={fyVal} defaultValue={0} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='rp-item'>
-                                        <div>Image center position</div>
-                                        <div className='multiInput'>
-                                            <div className='halfText'>
-                                                <label>cx</label>
-                                                <input className='halfInput' type='number' step="0.01" ref={cxVal} defaultValue={0} />
-                                            </div>
-                                            <div className='halfText'>
-                                                <label>cy</label>
-                                                <input className='halfInput' type='number' step="0.01" ref={cyVal} defaultValue={0} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='uploaded-gallery'>
-                                <div className='ug-header'>Uploaded Images</div>
-                                {images.map((image, index) => (
-                                    <div key={index} style={{ position: 'relative' }}>
-                                        <img
-                                            src={URL.createObjectURL(image)}
-                                            alt={`Uploaded Image ${index}`}
-                                            className='uploaded-image'
-                                        />
-                                        <div
-                                            onClick={() => handleRemoveImage(index)}
-                                            className='remove-image-btn'
-                                            title="Remove image"
-                                        >
-                                            X
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div className='project-image-container'>
-                    <h4>Images</h4>
+                    <h4>Uploaded Images</h4>
                     <div className="image-container">
                         {images.map((image, index) => (
                             <div className="image-box" key={index} style={{ position: 'relative' }}>
