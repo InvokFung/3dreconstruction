@@ -27,9 +27,7 @@ const ProjectUpload = ({ props }) => {
 
     //
     const fileInput = useRef();
-    const resultField = useRef();
-    const uploadfield_tooltip = useRef();
-    const uploadbtn_tooltip = useRef();
+    const nextBtnRef = useRef();
 
     const [uploaded, setUploaded] = useState(false);
     const [images, setImages] = useState([]);
@@ -97,6 +95,9 @@ const ProjectUpload = ({ props }) => {
     }
 
     const gotoNextStage = async () => {
+        // Disable the button to prevent multiple clicks
+        nextBtnRef.current.disabled = true;
+
         if (controllerRef.current)
             controllerRef.current.abort();
 
@@ -122,14 +123,15 @@ const ProjectUpload = ({ props }) => {
                 signal: controllerRef.current.signal
             });
             const data = await response.json();
-            if (data.status === 200) {                
+            if (data.status === 200) {
                 setStage(2);
             } else {
                 alert('Failed to load projects');
             }
         } catch (error) {
             console.log(error);
-        }        
+            nextBtnRef.current.disabled = false;
+        }
     }
 
     useEffect(() => {
@@ -207,7 +209,7 @@ const ProjectUpload = ({ props }) => {
                     />
                 </div>
                 <div className="submit-field">
-                    <div id="next-btn" className="btn buttonFilled" onClick={gotoNextStage}>Next</div>
+                    <div id="next-btn" className="btn buttonFilled" onClick={gotoNextStage} ref={nextBtnRef}>Next</div>
                 </div>
             </div>
         </>

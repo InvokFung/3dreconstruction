@@ -33,7 +33,12 @@ const ProjectConfig = ({ props }) => {
     const cxVal = useRef();
     const cyVal = useRef();
 
+    const nextBtnRef = useRef();
+
     const gotoNextStage = async () => {
+        // Disable the button to prevent multiple clicks
+        nextBtnRef.current.disabled = true;
+
         if (controllerRef.current)
             controllerRef.current.abort();
 
@@ -77,6 +82,7 @@ const ProjectConfig = ({ props }) => {
             }
         } catch (error) {
             console.log(error);
+            nextBtnRef.current.disabled = false;
         }
     }
 
@@ -136,7 +142,7 @@ const ProjectConfig = ({ props }) => {
                     </div>
                 </div>
                 <div className="submit-field">
-                    <div id="next-btn" className="btn buttonFilled" onClick={gotoNextStage}>Next</div>
+                    <div id="next-btn" className="btn buttonFilled" onClick={gotoNextStage} ref={nextBtnRef}>Next</div>
                 </div>
             </div>
         </>
