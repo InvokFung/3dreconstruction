@@ -25,7 +25,7 @@ const Login = () => {
         if (authenticated) {
             navigateTo('/profile');
         }
-    }, [authenticated]);
+    }, [authChecked, authenticated]);
 
     const handleLogin = async (event) => {
         event.preventDefault();

@@ -38,7 +38,7 @@ const ProjectResult = () => {
                 sceneRef.current = null;
             }
         }
-    }, [authenticated]);
+    }, [authChecked, authenticated]);
 
     //
     const mainContainer = useRef();

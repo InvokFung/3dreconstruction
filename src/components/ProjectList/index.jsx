@@ -26,7 +26,7 @@ const ProjectList = () => {
         } else if (authChecked && authenticated) {
             loadProjects();
         }
-    }, [authenticated]);
+    }, [authChecked, authenticated]);
 
     const loadProjects = async () => {
         if (controllerRef.current)
@@ -101,8 +101,8 @@ const ProjectList = () => {
     return (
         <>
             <Navbar></Navbar>
-            <div className="project-list">
-                <h3>Project list</h3>
+            <div id="project-list" className="project-field">
+                <h3>Your Projects</h3>
                 <table className="styled-table">
                     <thead>
                         <tr>
@@ -110,7 +110,7 @@ const ProjectList = () => {
                             <th>Project Name</th>
                             <th>Create Date</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -119,8 +119,8 @@ const ProjectList = () => {
                                 <td>{project.projectId}</td>
                                 <td>{project.projectName}</td>
                                 <td>{formatDate(project.projectDate)}</td>
-                                <td>{project.projectStatus}</td>
-                                <td><button className='redirect' onClick={() => viewProject(project.projectId)}>View</button></td>
+                                <td>{project.projectStatus.charAt(0).toUpperCase() + project.projectStatus.slice(1)}</td>
+                                <td><button className='redirect' onClick={() => viewProject(project.projectId)}>Browse</button></td>
                             </tr>
                         ))}
                     </tbody>

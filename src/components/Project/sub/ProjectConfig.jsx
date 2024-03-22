@@ -47,12 +47,12 @@ const ProjectConfig = ({ props }) => {
 
         // Add extra parameters
         const configs = {
-            depthMin: depthMinVal.current.value,
-            depthMax: depthMaxVal.current.value,
-            fx: fxVal.current.value,
-            fy: fyVal.current.value,
-            cx: cxVal.current.value,
-            cy: cyVal.current.value
+            depthMin: Number(depthMinVal.current.value),
+            depthMax: Number(depthMaxVal.current.value),
+            fx: Number(fxVal.current.value),
+            fy: Number(fyVal.current.value),
+            cx: Number(cxVal.current.value),
+            cy: Number(cyVal.current.value)
         };
 
         // Convert parameters to JSON string

@@ -45,7 +45,7 @@ const Main = () => {
                             </span>
                             <div className="home-btn-group">
                                 <button className="buttonFilled" onClick={getStarted}>Get Started</button>
-                                <button className="buttonFlat" onClick={learnMore}>Learn More →</button>
+                                <button className="buttonFlat" onClick={getStarted}>Learn More →</button>
                             </div>
                         </div>
                     </div>
@@ -65,24 +65,6 @@ const Main = () => {
                                     Explore the capabilities that make our image to 3D
                                     reconstruction tool stand out
                                 </span>
-                            </div>
-                            <div className="home-container03">
-                                {/* <FeatureCard
-                heading="High-Quality 3D Models"
-                subHeading="Accurately reconstruct images into detailed 3D models"
-              ></FeatureCard>
-              <FeatureCard
-                heading="Fast Processing"
-                subHeading="Quickly convert images to 3D reconstructions for efficiency"
-              ></FeatureCard>
-              <FeatureCard
-                heading="Customizable Outputs"
-                subHeading="Tailor the 3D reconstructions to meet specific requirements"
-              ></FeatureCard>
-              <FeatureCard
-                heading="User-Friendly Interface"
-                subHeading="Intuitive tools and controls for easy image to 3D conversion"
-              ></FeatureCard> */}
                             </div>
                         </div>
                     </div>
@@ -246,7 +228,7 @@ const Main = () => {
                             before. With our advanced algorithms and expertise, we ensure
                             unparalleled accuracy and detail in every reconstruction.
                         </span>
-                        <button className="buttonFilled">Learn More</button>
+                        <button className="buttonFilled" onClick={getStarted}>Learn More</button>
                     </div>
                 </div>                
                 <div className="home-footer">

@@ -9,8 +9,6 @@ import ProjectUpload from './sub/ProjectUpload';
 import ProjectConfig from './sub/ProjectConfig';
 import ProjectProgress from './sub/ProjectProgress';
 import ProjectResult from './sub/ProjectResult';
-import ProjectSetting from './sub/ProjectSetting';
-
 
 const Reconstruction = () => {
     const {
@@ -78,7 +76,7 @@ const Reconstruction = () => {
 
             initProjectPage();
         }
-    }, [authenticated]);
+    }, [authChecked, authenticated]);
 
     const [stage, setStage] = useState(0);
     const [page, setPage] = useState("Result");

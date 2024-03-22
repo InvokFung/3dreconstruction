@@ -25,7 +25,7 @@ const Profile = () => {
         if (authChecked && !authenticated) {
             navigateTo('/login');
         }
-    }, [authenticated]);
+    }, [authChecked, authenticated]);
 
     const viewProjectList = () => {
         navigateTo('/projects');

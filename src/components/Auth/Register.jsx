@@ -25,7 +25,7 @@ const Register = () => {
         if (authenticated) {
             navigateTo('/profile');
         }
-    }, [authenticated]);
+    }, [authChecked, authenticated]);
 
     const handleRegister = async (event) => {
         event.preventDefault();

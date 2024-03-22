@@ -37,7 +37,7 @@ const ProjectProgress = ({ props }) => {
         if (authChecked && authenticated) {
             getProjectProgress();
         }
-    }, [authenticated]);
+    }, [authChecked, authenticated]);
 
     const bindProgressListener = async (userId) => {
         const source = new EventSource(`http://localhost:3000/process_image/${userId}/${projectId}`);
@@ -105,6 +105,10 @@ const ProjectProgress = ({ props }) => {
                 <div className='project-header'>Project {projectId} - New Project</div>
                 <div>Processing...</div>
                 <div>Progress bar: {progress}%</div>
+                <div className="reminder">
+                    <p>Please note that the processing time may vary depending on the quality and quantity of the images.</p>
+                    <p>It could take around 5 - 30 minutes. Thank you for your patience.</p>
+                </div>
             </div>
         </>
     )

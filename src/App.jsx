@@ -8,6 +8,7 @@ import NotFound from "components/Notfound"
 import { SocketProvider } from "utils/SocketProvider"
 import Project from "components/Project"
 import ProjectList from "components/ProjectList"
+import ProjectResult from "components/Project/sub/ProjectResult"
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/projects" element={<ProjectList />} />
           <Route path="/project/:projectId" element={<Project />} />
+          <Route path="/project/:projectId/:tab" element={<ProjectResult />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </HashRouter>
