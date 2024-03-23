@@ -10,7 +10,7 @@ import ProjectConfig from './sub/ProjectConfig';
 import ProjectProgress from './sub/ProjectProgress';
 import ProjectResult from './sub/ProjectResult';
 
-const Reconstruction = () => {
+const ProjectMain = () => {
     const {
         authenticated,
         setAuthenticated,
@@ -40,8 +40,7 @@ const Reconstruction = () => {
                 method: 'GET',
                 signal: controllerRef.current.signal
             });
-            const data = await response.json();
-            console.log(data)
+            const data = await response.json();            
             if (data.status === 200) {
                 const projectStatus = data.projectStatus;
                 switch (projectStatus) {
@@ -56,7 +55,7 @@ const Reconstruction = () => {
                         break;
                     case "completed":
                     case "error":
-                        setStage(3);
+                        setStage(4);
                         break;
                 }
             } else {
@@ -108,4 +107,4 @@ const Reconstruction = () => {
     )
 };
 
-export default Reconstruction;
+export default ProjectMain;

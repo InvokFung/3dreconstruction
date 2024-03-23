@@ -1,7 +1,96 @@
 #project-list {
-    padding: 20px;
+    padding: 30px 50px 20px;
     min-width: 800px;
     max-width: 1200px;
+}
+
+.project-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.project-list-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: rgb(100, 100, 100);
+}
+
+.project-modal {
+    position: fixed;
+    z-index: 1;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px 40px;
+    border: 1px solid #888;
+    border-radius: 10px;    
+    width: 400px;
+}
+
+.modal-content input {
+    margin: 10px 0;
+    display: block;
+}
+
+.modal-header {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: rgb(100, 100, 100);
+}
+
+.modal-input {
+    width: 80%;
+    color: rgb(50, 50, 50);
+    padding: 5px 15px;
+    background-color: rgb(243, 243, 243);
+    border-radius: 6px;
+    border: 3px solid rgb(216, 215, 215);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.modal-input:focus {
+    outline: none !important;
+    border: 3px solid #719ECE;
+    box-shadow: 0 0 3px #719ECE;
+}
+
+#launch-btn {
+    margin-top: 20px;
+}
+
+.close-button {
+    padding-bottom: 10px;
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;    
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.table-wrapper {
+    max-height: 800px;
+    overflow: auto;
 }
 
 .styled-table {
@@ -23,7 +112,7 @@
 
 .styled-table th,
 .styled-table td {
-    padding: 12px 15px;
+    padding: 25px 15px;
 }
 
 .styled-table tbody tr {

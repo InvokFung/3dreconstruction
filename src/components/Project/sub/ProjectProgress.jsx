@@ -54,7 +54,7 @@ const ProjectProgress = ({ props }) => {
                     }
                     setStage(4);
                 } else {
-                    console.log(`Progress: ${event.data}%`);
+                    // console.log(`Progress: ${event.data}%`);
                     setProgress(event.data);
                     localProgress = event.data;
                 }
@@ -95,7 +95,7 @@ const ProjectProgress = ({ props }) => {
 
     return (
         <>
-            <div className="project">
+            <div className="project-progress">
                 <div className='project-header'>Project {projectId} - New Project</div>
                 <div className='progressbar-header'>Processing the reconstruction ...</div>
                 <div id="project-progressbar-wrapper" className="progress">

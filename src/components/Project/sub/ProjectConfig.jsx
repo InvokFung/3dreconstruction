@@ -33,15 +33,61 @@ const ProjectConfig = ({ props }) => {
     const cxVal = useRef();
     const cyVal = useRef();
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const configController = useRef();
+
+    let isSubmitting = false;
+
+    const gotoPreviousStage = async () => {
+        if (isSubmitting) {
+            console.log("Already submitting")
+            return;
+        }
+        isSubmitting = true;
+
+        if (configController.current)
+            configController.current.abort();
+
+        configController.current = new AbortController();
+
+        const userId = userData.userId;
+
+        const formData = new FormData();
+        formData.append('userId', userId);
+        formData.append('projectId', projectId);
+        formData.append('action', "status");
+
+        formData.append('status', "idle");
+
+        try {
+            const projectUrl = `http://localhost:3000/projectUpdate`;
+            const response = await fetch(projectUrl, {
+                method: "POST",
+                body: formData,
+                signal: configController.current.signal
+            });
+            const data = await response.json();
+            if (data.status === 200) {
+                setStage(1);
+            } else {
+                alert('Failed to load projects');
+            }
+        } catch (error) {
+            console.log(error);
+            isSubmitting = false;
+        }
+    }
 
     const gotoNextStage = async () => {
-        setIsSubmitting(true);
+        if (isSubmitting) {
+            console.log("Already submitting")
+            return;
+        }
+        isSubmitting = true;
 
-        if (controllerRef.current)
-            controllerRef.current.abort();
+        if (configController.current)
+            configController.current.abort();
 
-        controllerRef.current = new AbortController();
+        configController.current = new AbortController();
 
         const userId = userData.userId;
 
@@ -71,7 +117,7 @@ const ProjectConfig = ({ props }) => {
             const response = await fetch(projectUrl, {
                 method: "POST",
                 body: formData,
-                signal: controllerRef.current.signal
+                signal: configController.current.signal
             });
             const data = await response.json();
             if (data.status === 200) {
@@ -81,7 +127,7 @@ const ProjectConfig = ({ props }) => {
             }
         } catch (error) {
             console.log(error);
-            setIsSubmitting(false);
+            isSubmitting = false;
         }
     }
 
@@ -141,7 +187,8 @@ const ProjectConfig = ({ props }) => {
                     </div>
                 </div>
                 <div className="submit-field">
-                    <div id="next-btn" className="btn buttonFilled" onClick={gotoNextStage} disabled={isSubmitting}>Next</div>
+                    <div id="next-btn" className="btn buttonFlat" onClick={gotoPreviousStage} >Return</div>
+                    <div id="next-btn" className="btn buttonFilled" onClick={gotoNextStage} >Next</div>
                 </div>
             </div>
         </>

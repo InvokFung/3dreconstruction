@@ -91,9 +91,10 @@ const Overview = ({ projectData }) => {
 
             const bodyStream = getData.Body;
             const bodyAsString = await bodyStream.transformToByteArray();
-            const blob = new Blob([bodyAsString.buffer], { type: 'image/jpeg' }); // Adjust the MIME type as needed
-            const url = URL.createObjectURL(blob);
-            return url;
+            const blob = new Blob([bodyAsString.buffer], { type: 'image/jpeg' });
+            const fileName = file.Key.split("/").slice(-1)[0];
+            const imageFile = new File([blob], fileName, { type: 'image/jpeg' });
+            return imageFile;
         }));
 
         return images;
@@ -191,7 +192,7 @@ const Overview = ({ projectData }) => {
             formData.append('config', JSON.stringify(config));
         } else if (action === "image") {
             images.forEach((image, index) => {
-                formData.append(`image${index}`, image);
+                formData.append('images', image, image.name);
             });
         }
 
@@ -228,6 +229,85 @@ const Overview = ({ projectData }) => {
             console.log(error);
             event.target.disabled = false;
         }
+    }
+
+    function renameFile(newFile, existingFileNames) {
+        let newFileName = newFile.name;
+    
+        if (existingFileNames.includes(newFileName)) {
+            const fileNameParts = newFileName.split('.');
+            const fileExtension = fileNameParts.pop();
+            const fileName = fileNameParts.join('.');
+            newFileName = `${fileName}_1.${fileExtension}`;
+            let count = 2;
+    
+            while (existingFileNames.includes(newFileName)) {
+                newFileName = `${fileName}_${count}.${fileExtension}`;
+                count++;
+            }
+        }
+    
+        return new File([newFile], newFileName, { type: newFile.type });
+    }
+
+    const handleDragOver = (event) => {
+        event.preventDefault();
+    }
+
+    const handleDrop = (event) => {        
+        event.preventDefault();
+        if (!imgEdit) return;
+
+        let newImages = [...images];  // Create a copy of the current images
+        let existingFileNames = images.map(file => file.name);
+
+        if (event.dataTransfer.items) {
+            // Use DataTransferItemList interface to access the file(s)
+            for (var i = 0; i < event.dataTransfer.items.length; i++) {
+                // If dropped items aren't files, reject them
+                if (event.dataTransfer.items[i].kind === 'file') {
+                    var file = event.dataTransfer.items[i].getAsFile();
+                    var fileType = file.name.split('.').pop().toLowerCase();
+
+                    // Check if file type is jpg, jpeg or png
+                    if (fileType === 'jpg' || fileType === 'jpeg' || fileType === 'png') {
+                        const renamedFile = renameFile(file, existingFileNames);
+                        newImages.push(renamedFile);
+                    } else {
+                        alert("Invalid file type. Please upload only jpg, jpeg or png files.")
+                    }
+                }
+            }
+        } else {
+            // Use DataTransfer interface to access the file(s)
+            for (var i = 0; i < event.dataTransfer.files.length; i++) {
+                var fileType = event.dataTransfer.files[i].name.split('.').pop().toLowerCase();
+
+                // Check if file type is jpg, jpeg or png
+                if (fileType === 'jpg' || fileType === 'jpeg' || fileType === 'png') {
+                    const renamedFile = renameFile(event.dataTransfer.files[i], existingFileNames);
+                    newImages.push(renamedFile);
+                } else {
+                    alert("Invalid file type. Please upload only jpg, jpeg or png files.")
+                }
+            }
+        }
+        setImages(newImages);
+    }
+
+    const handleAddImage = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.multiple = true;
+        input.accept = '.jpg,.jpeg,.png';
+        input.onchange = (event) => {
+            const newFiles = Array.from(event.target.files);
+            const existingFileNames = images.map(file => file.name);
+            const renamedFiles = newFiles.map(newFile => renameFile(newFile, existingFileNames));
+
+            setImages(prevImages => [...prevImages, ...renamedFiles]);
+        };
+        input.click();
     }
 
     const handleRemoveImage = (index) => {
@@ -380,25 +460,34 @@ const Overview = ({ projectData }) => {
                             </div>
                         )}
                     </div>
-                    <div className="image-container">
+                    <div className="image-container"
+                        onDrop={handleDrop}
+                        onDragOver={handleDragOver}
+                    >
                         {images.map((image, index) => (
                             <div className="image-box" key={index} style={{ position: 'relative' }}>
                                 <img
-                                    src={image}
-                                    alt={`Image ${index}`}
+                                    src={URL.createObjectURL(image)}
+                                    alt={`${image.name}`}
+                                    title={`${image.name}`}
                                     className='uploaded-image'
                                 />
                                 {imgEdit && (
                                     <div
                                         onClick={() => handleRemoveImage(index)}
                                         className='remove-image-btn'
-                                        title="Remove image"
+                                        title={`Remove ${image.name}`}
                                     >
-                                        X
+                                        -
                                     </div>
                                 )}
                             </div>
                         ))}
+                        {imgEdit && (
+                            <div id="upload-extra" className="image-box" onClick={handleAddImage}>
+                                +
+                            </div>
+                        )}
                     </div>
                 </div>
             </div >

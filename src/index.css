@@ -87,6 +87,7 @@ a:hover {
 
 body {
   margin: 0;
+  min-width: 900px;
 }
 
 h1 {
@@ -112,6 +113,7 @@ h1 {
 
 .btn:hover {
   background-color: rgb(240, 240, 240);
+  border-color: rgb(210, 210, 210);
 }
 
 .pointer {
@@ -152,9 +154,14 @@ h1 {
 
 .buttonFlat {
   color: #000000;
+  background-color: rgb(200, 200, 200);
   font-family: Lato;
   font-weight: bold;
   padding: 8px 24px;
+}
+
+.buttonFlat:hover {
+  background-color: rgb(210, 210, 210);
 }
 
 .buttonFilled {
@@ -190,4 +197,10 @@ h1 {
 
 #root {
   min-height: 100vh;
+}
+
+@media (max-width: 900px) {
+  /* body {
+    min-width: 0;
+  } */
 }

@@ -16,15 +16,16 @@ class Scene {
 
     init() {
         const container = this.container;
+        this.containerSize = container.getBoundingClientRect();
 
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xadd8e6); // Set background color to warm light blue
 
-        this.camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(75, this.containerSize.width / this.containerSize.height, 0.1, 1000);
         this.camera.position.z = 5;
 
-        this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setSize(container.clientWidth, container.clientHeight); // Set renderer size to container size
+        this.renderer = new THREE.WebGLRenderer();        
+        this.renderer.setSize(this.containerSize.width, this.containerSize.height); // Set renderer size to container size
         container.appendChild(this.renderer.domElement);
 
         var size = 10;
@@ -138,7 +139,7 @@ class Scene {
                 var npyBlob = new Blob([buffer], { type: 'application/octet-stream' });
                 var npyUrl = URL.createObjectURL(npyBlob);
 
-                console.log("Exported successfully")
+                console.log("Export urls ready.")
                 resolve([gltfUrl, npyUrl]);
             });
         })
@@ -164,9 +165,11 @@ class Scene {
     }
 
     onWindowResize() {
-        this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
+        this.containerSize = this.container.getBoundingClientRect();
+        
+        this.camera.aspect = this.containerSize.width / this.containerSize.height;
         this.camera.updateProjectionMatrix();
-        this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+        this.renderer.setSize(this.containerSize.width, this.containerSize.height);
     }
 
     dispose() {

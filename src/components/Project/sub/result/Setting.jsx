@@ -20,6 +20,16 @@ const Setting = ({ projectData }) => {
     const projectNameRef = useRef();
 
     const updateProject = async (action) => {
+        if (action === "delete") {
+            if (!window.confirm("Please confirm to delete this project.")) {
+                return;
+            }
+        } else if (action === "rename") {
+            if (projectNameRef.current.value.trim() === '') {
+                alert('Project name cannot be empty');
+                return;
+            }
+        }
         if (controllerRef.current)
             controllerRef.current.abort();
 

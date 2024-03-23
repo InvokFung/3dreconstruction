@@ -33,7 +33,7 @@ const ProjectList = () => {
             controllerRef.current.abort();
 
         controllerRef.current = new AbortController();
-        
+
         const userId = userData.userId;
 
         try {
@@ -58,15 +58,19 @@ const ProjectList = () => {
     }
 
     const createProject = async () => {
+        if (projectName.trim() === '') {
+            alert('Project name cannot be empty');
+            return;
+        }
+
         if (controllerRef.current)
             controllerRef.current.abort();
 
         controllerRef.current = new AbortController();
-        console.log(userData)
 
         try {
             const projectData = {
-                projectName: 'New Project',
+                projectName: projectName,
                 projectOwner: userData.userId
             }
             const projectUrl = `http://localhost:3000/createProject/`;
@@ -98,35 +102,69 @@ const ProjectList = () => {
         navigateTo(`/project/${projectId}`);
     }
 
+    const [showModal, setShowModal] = useState(false);
+    const [projectName, setProjectName] = useState('New Project');
+
+    const openModal = () => {
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+    };
+
+    const handleInputChange = (event) => {
+        setProjectName(event.target.value);
+    };
+
     return (
         <>
             <Navbar></Navbar>
             <div id="project-list" className="project-field">
-                <h3>Your Projects</h3>
-                <table className="styled-table">
-                    <thead>
-                        <tr>
-                            <th>Project Id</th>
-                            <th>Project Name</th>
-                            <th>Create Date</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {projectList.map((project, index) => (
-                            <tr key={index}>
-                                <td>{project.projectId}</td>
-                                <td>{project.projectName}</td>
-                                <td>{formatDate(project.projectDate)}</td>
-                                <td>{project.projectStatus.charAt(0).toUpperCase() + project.projectStatus.slice(1)}</td>
-                                <td><button className='redirect' onClick={() => viewProject(project.projectId)}>Browse</button></td>
+                <div className='project-list-header'>
+                    <div className='project-list-title'>Your Projects</div>
+                    <div className="redirect btn" onClick={openModal}>Create Project</div>
+                </div>
+                <div className='table-wrapper'>
+                    <table className="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Project Id</th>
+                                <th>Project Name</th>
+                                <th>Create Date</th>
+                                <th>Status</th>
+                                <th></th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-                <button className="redirect" onClick={createProject}>Create Project</button>
+                        </thead>
+                        <tbody>
+                            {projectList.map((project, index) => (
+                                <tr key={index}>
+                                    <td>{project.projectId}</td>
+                                    <td>{project.projectName}</td>
+                                    <td>{formatDate(project.projectDate)}</td>
+                                    <td>{project.projectStatus.charAt(0).toUpperCase() + project.projectStatus.slice(1)}</td>
+                                    <td><button className='redirect' onClick={() => viewProject(project.projectId)}>Browse</button></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
+            {showModal && (
+                <div className="project-modal">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <div className='modal-title'>Project Setup</div>
+                            <span className="close-button" onClick={closeModal}>&times;</span>
+                        </div>
+                        <form onSubmit={createProject}>
+                            <div>Project Name</div>
+                            <input className="modal-input" type="text" value={projectName} onChange={handleInputChange} />
+                            <input id="launch-btn" className="btn" type="submit" value="Launch Project" />
+                        </form>
+                    </div>
+                </div>
+            )}
         </>
     )
 };

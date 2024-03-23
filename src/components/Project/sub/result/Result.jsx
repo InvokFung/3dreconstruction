@@ -99,12 +99,16 @@ const Result = ({ projectData }) => {
 
     const downloadResult = (type) => {
         var link = document.createElement('a');
+
+        let projectName = projectData.projectName;
+        projectName = projectName.replace(/ /g, "_");
+
         if (type === "npy") {
             link.href = downloadUrl.npyUrl;
-            link.download = 'result.npy';
+            link.download = `${projectName}_result.npy`;
         } else if (type === "gltf") {
             link.href = downloadUrl.gltfUrl;
-            link.download = 'result.gltf';
+            link.download = `${projectName}_result.gltf`;
         }
         link.click();
     }
@@ -128,30 +132,34 @@ const Result = ({ projectData }) => {
     return (
         <>
             <div id="project-result" className='background-field'>
-                <h4>Result Viewport</h4>
+                <div className='rcs-header'>
+                    <div>
+                        <span>Result Viewport</span>
+                    </div>
+                    <div>
+                        {downloadUrl && (
+                            <>
+                                <button className='result-dl-btn btn' onClick={() => downloadResult("npy")}>Export as .npy</button>
+                                <button className='result-dl-btn btn' onClick={() => downloadResult("gltf")}>Export as .glTF</button>
+                            </>
+                        )}
+                    </div>
+                </div>
                 {!error ? (
                     <div ref={mainContainer} className='rcs-container'>
                         {resultRetrieved ? (
                             <div className='result-field' ref={resultField}></div>
                         ) : (
-                            <div className='result-field'>
-                                <span>Retrieving Model...</span>
-                                <span>Please be patient.</span>
+                            <div className='result-wait-field'>
+                                <p>Preparing your reconstructed model . . .</p>
+                                <p>This could take a few minutes. Thank you for your patience.</p>
                             </div>
                         )}
-                        <div className='option-field'>
-                            {downloadUrl && (
-                                <>
-                                    <button onClick={() => downloadResult("npy")}>Download npy</button>
-                                    <button onClick={() => downloadResult("gltf")}>Download glTF</button>
-                                </>
-                            )}
-                        </div>
                     </div>
                 ) : (
-                    <div className='result-field'>
+                    <div className='result-error-field'>
                         <p>There is an error occured during reconstruction.</p>
-                        <p>Please go to [Overview] and restart the process.</p>
+                        <p>Please go to [ Overview ] tab to restart the process.</p>
                     </div>
 
                 )}

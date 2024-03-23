@@ -15,7 +15,7 @@ const Navbar = () => {
 
     return (
         <div className="navbar-container">
-            <span className="logo logo-white" onClick={toHome}>RECONSTRUCT</span>            
+            <span className="logo logo-white" onClick={toHome}>WEBRECON</span>            
             <Menu></Menu>
             <Authentication></Authentication>
         </div>

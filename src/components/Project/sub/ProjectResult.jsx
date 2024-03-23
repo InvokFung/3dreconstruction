@@ -49,7 +49,6 @@ const ProjectResult = () => {
                 signal: controllerRef.current.signal
             });
             const data = await response.json();
-            console.log(data)
             if (data.status === 200) {
                 setProjectData(data.project);
             } else {
@@ -62,7 +61,6 @@ const ProjectResult = () => {
 
 
     useEffect(() => {
-        console.log(authChecked, authenticated)
         if (authChecked && !authenticated) {
             navigateTo('/login');
         } else if (authChecked && authenticated) {
@@ -83,7 +81,7 @@ const ProjectResult = () => {
             if (controllerRef.current)
                 controllerRef.current.abort();
         }
-    }, [])
+    }, [])    
 
     // =============================================================
 
@@ -91,10 +89,10 @@ const ProjectResult = () => {
         <>
             <Navbar></Navbar>
             <div className="project">
-                <div className='project-header-clean'>
+                <div id="project-result-main" className='project-header-clean'>
                     <span className="project-breadcrumb" onClick={gotoProjects}>{userData.username}</span>
                     <span className='breadcrumb-symbol'>&nbsp;/&nbsp;</span>
-                    <span className="project-breadcrumb" onClick={() => setActiveTab('overview')}>New Project</span>
+                    <span className="project-breadcrumb" onClick={() => setActiveTab('overview')}>{projectData.projectName}</span>
                 </div>
                 <div className="project-tab">
                     <div className={`tab-btn ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>Overview</div>

@@ -5,7 +5,33 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>3D Reconstruction</title>
+    <title>WebRecon - A Simplified Reconstruction Tool</title>
+    <script>
+        window.onload = function () {
+            var titleText = document.title;
+            var counter = 0;
+            var intervalId = setInterval(scrollTitle, 300);
+
+            var titleTextWords = titleText.split(' ');
+
+            function scrollTitle() {
+                counter++;
+                document.title = titleText.substring(counter);
+                var currentTitleWords = document.title.split(' ');                
+                if (counter == 14) {
+                    clearInterval(intervalId);
+                    setTimeout(() => {
+                        document.title = titleText; // reset the title
+                        setTimeout(function () {
+                            counter = 0;
+                            document.title = titleText; // reset the title
+                            intervalId = setInterval(scrollTitle, 300);
+                        }, 2000); // wait for 3 seconds before start scrolling again
+                    }, 3000); // wait for 3 seconds before reset the title
+                }
+            }
+        };
+    </script>
 </head>
 
 <body>
