@@ -6,6 +6,17 @@ import useSocket from 'utils/SocketProvider';
 import { S3Client, GetObjectCommand, ListObjectsCommand } from "@aws-sdk/client-s3";
 import "../css/ProjectResult.css"
 
+const Reminder = ({ status }) => {
+    return (
+        <div className={`reminder ${status}`}>
+            {status === 'loading' && 'Loading...'}
+            {status === 'resetting' && 'Resetting...'}
+            {status === 'updating' && 'Updating...'}
+            {status === 'success' && 'Updated successfully!'}
+            {status === 'error' && 'Update failed.'}
+        </div>
+    );
+};
 
 const Overview = ({ projectData }) => {
     const {
@@ -24,7 +35,7 @@ const Overview = ({ projectData }) => {
 
     useEffect(() => {
         if (authChecked && authenticated) {
-            retrieveImages();
+            retrieveImages("init");
         }
     }, [authChecked, authenticated]);
 
@@ -34,10 +45,17 @@ const Overview = ({ projectData }) => {
     const fyVal = useRef();
     const cxVal = useRef();
     const cyVal = useRef();
+
+    const projectController = useRef();
+    const configController = useRef();
+
+    const [updateImageStatus, setUpdateImageStatus] = useState(null);
+    const [updateConfigStatus, setUpdateConfigStatus] = useState(null);
     const [images, setImages] = useState([]);
+    const [config, setConfig] = useState(projectData.projectConfig);
+
     const [imgEdit, setImgEdit] = useState(false);
     const [configEdit, setConfigEdit] = useState(false);
-    const projectConfig = projectData.projectConfig;
 
     const s3Downloadv3 = async () => {
 
@@ -81,12 +99,48 @@ const Overview = ({ projectData }) => {
         return images;
     }
 
-    const retrieveImages = async () => {
-        console.log("Fetching images...")
+    const retrieveConfig = async () => {
+        setUpdateConfigStatus('resetting');
+
+        if (configController.current)
+            configController.current.abort();
+
+        configController.current = new AbortController();
+
+        const userId = userData.userId;
+        const projectId = projectData.projectId;
+        const detailName = "config";
+
+        try {
+            const projectUrl = `http://localhost:3000/getProjectDetails/${userId}/${projectId}?detail=${detailName}`;
+            const response = await fetch(projectUrl, {
+                method: 'GET',
+                signal: configController.current.signal
+            });
+            const data = await response.json();
+            console.log(data)
+            if (data.status === 200) {
+                console.log("Configuration updated")
+                setConfig(data.projectConfig)
+                setUpdateConfigStatus(null);
+            } else {
+                console.log("Error: Restart failed")
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const retrieveImages = async (type) => {
+        if (type == "init")
+            setUpdateImageStatus('loading');
+        else if (type == "reset")
+            setUpdateImageStatus('resetting');
 
         try {
             let images = await s3Downloadv3();
             setImages(images);
+            setUpdateImageStatus(null);
             console.log("Images fetched.")
         } catch (error) {
             if (error.name === 'NoSuchKey') {
@@ -104,21 +158,27 @@ const Overview = ({ projectData }) => {
     }
 
     const updateProject = async (event, action) => {
-        event.currentTarget.disabled = true;
+        event.target.disabled = true;
 
         if (action === "restart") {
             let warningText = `Please ensure the source images and configuration are updated.\nOtherwise the result will be the similar.`;
 
             if (confirm(warningText) != true) {
-                event.currentTarget.disabled = false;
+                event.target.disabled = false;
                 return;
             }
         }
 
-        if (controllerRef.current)
-            controllerRef.current.abort();
+        if (action === "config") {
+            setUpdateConfigStatus('updating');
+        } else if (action === "image") {
+            setUpdateImageStatus('updating');
+        }
 
-        controllerRef.current = new AbortController();
+        if (projectController.current)
+            projectController.current.abort();
+
+        projectController.current = new AbortController();
 
         const userId = userData.userId;
         const projectId = projectData.projectId;
@@ -127,8 +187,12 @@ const Overview = ({ projectData }) => {
         formData.append('projectId', projectId);
         formData.append('action', action);
 
-        if (action === "image") {
-            // Process image update here tmr
+        if (action === "config") {
+            formData.append('config', JSON.stringify(config));
+        } else if (action === "image") {
+            images.forEach((image, index) => {
+                formData.append(`image${index}`, image);
+            });
         }
 
         try {
@@ -136,7 +200,7 @@ const Overview = ({ projectData }) => {
             const response = await fetch(projectUrl, {
                 method: 'POST',
                 body: formData,
-                signal: controllerRef.current.signal
+                signal: projectController.current.signal
             });
             const data = await response.json();
             console.log(data)
@@ -146,16 +210,23 @@ const Overview = ({ projectData }) => {
                 } else if (action === "image") {
                     console.log("Images updated")
                     setImgEdit(false);
+                    setUpdateImageStatus('success');
                 } else if (action === "config") {
                     console.log("Configuration updated")
                     setConfigEdit(false);
+                    setUpdateConfigStatus('success');
                 }
             } else {
                 console.log("Error: Restart failed")
+                if (action === "image") {
+                    setUpdateImageStatus('error');
+                } else if (action === "config") {
+                    setUpdateConfigStatus('error');
+                }
             }
         } catch (error) {
             console.log(error);
-            event.currentTarget.disabled = false;
+            event.target.disabled = false;
         }
     }
 
@@ -163,14 +234,19 @@ const Overview = ({ projectData }) => {
         setImages(prevImages => prevImages.filter((image, i) => i !== index));
     }
 
+    const handleInputChange = (event, field) => {
+        const value = event.target.value;
+        setConfig(prevConfig => ({ ...prevConfig, [field]: value }));
+    };
+
     const cancelEditConfig = () => {
         setConfigEdit(false);
-        // retrieveConfig();
+        retrieveConfig("reset");
     }
 
     const cancelEditImg = () => {
         setImgEdit(false);
-        retrieveImages();
+        retrieveImages("reset");
     }
 
     // =============================================================
@@ -201,9 +277,12 @@ const Overview = ({ projectData }) => {
                         </tbody>
                     </table>
                 </div>
-                <div className='overview-config overview-section'>                    
+                <div className='overview-config overview-section'>
                     <div className="section-header">
-                        <div className='section-title'>Configuration</div>
+                        <div className='section-title'>
+                            <span>Configuration</span>
+                            {updateConfigStatus && <Reminder status={updateConfigStatus} key={updateConfigStatus} />}
+                        </div>
                         {!configEdit ? (
                             <div className='section-btn' onClick={() => setConfigEdit(true)}>Edit</div>
                         ) : (
@@ -220,11 +299,21 @@ const Overview = ({ projectData }) => {
                                 <div className='multiInput'>
                                     <div className='halfText'>
                                         <label>min</label>
-                                        <input className='halfInput' type='number' step="0.01" ref={depthMinVal} defaultValue={projectConfig.depthMin} disabled={!configEdit} />
+                                        <input className='halfInput' type='number' step="0.01"
+                                            ref={depthMinVal}
+                                            value={config.depthMin}
+                                            onChange={e => handleInputChange(e, 'depthMin')}
+                                            disabled={!configEdit}
+                                        />
                                     </div>
                                     <div className='halfText'>
                                         <label>max</label>
-                                        <input className='halfInput' type='number' step="0.01" ref={depthMaxVal} defaultValue={projectConfig.depthMax} disabled={!configEdit} />
+                                        <input className='halfInput' type='number' step="0.01"
+                                            ref={depthMaxVal}
+                                            value={config.depthMax}
+                                            onChange={e => handleInputChange(e, 'depthMax')}
+                                            disabled={!configEdit}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -233,11 +322,20 @@ const Overview = ({ projectData }) => {
                                 <div className='multiInput'>
                                     <div className='halfText'>
                                         <label>fx</label>
-                                        <input className='halfInput' type='number' step="0.01" ref={fxVal} defaultValue={projectConfig.fx} disabled={!configEdit} />
+                                        <input className='halfInput' type='number' step="0.01"
+                                            ref={fxVal}
+                                            value={config.fx}
+                                            onChange={e => handleInputChange(e, 'fx')}
+                                            disabled={!configEdit} />
                                     </div>
                                     <div className='halfText'>
                                         <label>fy</label>
-                                        <input className='halfInput' type='number' step="0.01" ref={fyVal} defaultValue={projectConfig.fy} disabled={!configEdit} />
+                                        <input className='halfInput' type='number' step="0.01"
+                                            ref={fyVal}
+                                            value={config.fy}
+                                            onChange={e => handleInputChange(e, 'fy')}
+                                            disabled={!configEdit}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -246,11 +344,21 @@ const Overview = ({ projectData }) => {
                                 <div className='multiInput'>
                                     <div className='halfText'>
                                         <label>cx</label>
-                                        <input className='halfInput' type='number' step="0.01" ref={cxVal} defaultValue={projectConfig.cx} disabled={!configEdit} />
+                                        <input className='halfInput' type='number' step="0.01"
+                                            ref={cxVal}
+                                            value={config.cx}
+                                            onChange={e => handleInputChange(e, 'cx')}
+                                            disabled={!configEdit}
+                                        />
                                     </div>
                                     <div className='halfText'>
                                         <label>cy</label>
-                                        <input className='halfInput' type='number' step="0.01" ref={cyVal} defaultValue={projectConfig.cy} disabled={!configEdit} />
+                                        <input className='halfInput' type='number' step="0.01"
+                                            ref={cyVal}
+                                            value={config.cy}
+                                            onChange={e => handleInputChange(e, 'cy')}
+                                            disabled={!configEdit}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -259,7 +367,10 @@ const Overview = ({ projectData }) => {
                 </div>
                 <div className='overview-image overview-section'>
                     <div className="section-header">
-                        <div className='section-title'>Source Images</div>
+                        <div className='section-title'>
+                            <span>Source Images</span>
+                            {updateImageStatus && <Reminder status={updateImageStatus} key={updateImageStatus} />}
+                        </div>
                         {!imgEdit ? (
                             <div className='section-btn' onClick={() => setImgEdit(true)}>Edit</div>
                         ) : (

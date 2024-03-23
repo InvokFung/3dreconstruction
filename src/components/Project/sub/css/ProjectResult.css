@@ -13,7 +13,7 @@
     border-radius: 5px;
 }
 
-.project-breadcrumb:hover {    
+.project-breadcrumb:hover {
     color: gray;
     background: rgb(230, 230, 230);
 }
@@ -22,13 +22,26 @@
     color: gray;
 }
 
-.reminder {
+.progressbar-header {
+    margin: 20px 0;
+}
+
+.progress-reminder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
     background-color: #ffffcc;
     border: 1px solid #ffcc00;
-    padding: 10px;
-    margin: 10px 0;
+    padding: 25px 10px;
+    margin: 50px auto 0 auto;
+    font-size: 0.95em;
+    color: #666;
     border-radius: 5px;
+    max-width: 920px;    
 }
+
 /* Overview */
 
 #project-overview {
@@ -44,6 +57,53 @@
     display: flex;
     justify-content: space-between;
     padding-bottom: 10px;
+}
+
+.reminder {
+    padding: 5px 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    animation: fadeOut 5s forwards;
+    display: inline-block;
+    margin: 0px 10px;
+}
+
+.reminder.updating,
+.reminder.loading,
+.reminder.resetting {
+    background-color: #FFA07A;
+}
+
+.reminder.success {
+    background-color: #90EE90;
+}
+
+.reminder.error {
+    background-color: #F08080;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+/* Project Progress Bar */
+#project-progressbar-wrapper {
+    height: 30px;
+}
+
+@keyframes progress-bar-stripes {
+    from  { background-position: 40px 0; }
+    to    { background-position: 0 0; }
+}
+
+.progress-bar.animate {
+    animation: progress-bar-stripes 2s linear infinite;
 }
 
 .image-container {

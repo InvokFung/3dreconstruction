@@ -27,8 +27,8 @@ const ProjectUpload = ({ props }) => {
 
     //
     const fileInput = useRef();
-    const nextBtnRef = useRef();
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [uploaded, setUploaded] = useState(false);
     const [images, setImages] = useState([]);
 
@@ -95,8 +95,7 @@ const ProjectUpload = ({ props }) => {
     }
 
     const gotoNextStage = async () => {
-        // Disable the button to prevent multiple clicks
-        nextBtnRef.current.disabled = true;
+        setIsSubmitting(true);
 
         if (controllerRef.current)
             controllerRef.current.abort();
@@ -130,7 +129,7 @@ const ProjectUpload = ({ props }) => {
             }
         } catch (error) {
             console.log(error);
-            nextBtnRef.current.disabled = false;
+            setIsSubmitting(false);
         }
     }
 
@@ -209,7 +208,7 @@ const ProjectUpload = ({ props }) => {
                     />
                 </div>
                 <div className="submit-field">
-                    <div id="next-btn" className="btn buttonFilled" onClick={gotoNextStage} ref={nextBtnRef}>Next</div>
+                    <div id="next-btn" className="btn buttonFilled" onClick={gotoNextStage} disabled={isSubmitting}>Next</div>
                 </div>
             </div>
         </>

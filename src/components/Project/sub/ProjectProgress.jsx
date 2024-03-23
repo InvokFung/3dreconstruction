@@ -2,12 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import useSocket from 'utils/SocketProvider';
-import Navbar from 'components/Navgbar';
-
-import Scene from "app/scene"
-
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-
 
 const ProjectProgress = ({ props }) => {
     const {
@@ -103,11 +97,15 @@ const ProjectProgress = ({ props }) => {
         <>
             <div className="project">
                 <div className='project-header'>Project {projectId} - New Project</div>
-                <div>Processing...</div>
-                <div>Progress bar: {progress}%</div>
-                <div className="reminder">
-                    <p>Please note that the processing time may vary depending on the quality and quantity of the images.</p>
-                    <p>It could take around 5 - 30 minutes. Thank you for your patience.</p>
+                <div className='progressbar-header'>Processing the reconstruction ...</div>
+                <div id="project-progressbar-wrapper" className="progress">
+                    <div id="project-progressbar" className="progress-bar progress-bar-striped active animate" role="progressbar" aria-valuenow={progress} aria-valuemin="0" aria-valuemax="100" style={{ width: `${progress}%` }}>
+                        {progress}%
+                    </div>
+                </div>
+                <div className="progress-reminder">
+                    <span>Please note that the processing time may vary depending on the quality and quantity of the images.</span>
+                    <span>The processing time typically ranges from a few minutes to a few hours. Your patience is appreciated.</span>
                 </div>
             </div>
         </>

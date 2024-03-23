@@ -56,7 +56,7 @@ const Reconstruction = () => {
                         break;
                     case "completed":
                     case "error":
-                        setStage(4);
+                        setStage(3);
                         break;
                 }
             } else {
