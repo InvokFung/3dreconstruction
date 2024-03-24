@@ -9,6 +9,7 @@ import { SocketProvider } from "utils/SocketProvider"
 import Project from "components/Project"
 import ProjectList from "components/ProjectList"
 import ProjectResult from "components/Project/sub/ProjectResult"
+import './index.css';
 
 function App() {
   return (
