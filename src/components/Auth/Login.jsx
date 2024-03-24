@@ -38,7 +38,8 @@ const Login = () => {
 
         try {
             // Request to backend for login
-            const response = await fetch('http://localhost:3000/login', {
+            const backendURL = import.meta.env.VITE_BACKEND_URL;
+            const response = await fetch(`${backendURL}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -99,9 +100,9 @@ const Login = () => {
                                         required
                                     />
                                 </ div>
-                                <button type="submit" id="submit-btn" className="btn btn-primary">Login</button>
+                                <button type="submit" id="submit-btn" className="btn">Login</button>
                             </form>
-                            <button className="redirect" onClick={() => navigateTo('/register')}>Not registered yet? Sign-up now</button>
+                            <button className="btn redirect" onClick={() => navigateTo('/register')}>Not registered yet? Sign-up now</button>
                         </>
                     )}
                 </div>

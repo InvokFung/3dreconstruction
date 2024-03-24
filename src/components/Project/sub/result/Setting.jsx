@@ -53,7 +53,8 @@ const Setting = ({ projectData }) => {
         }
 
         try {
-            const projectUrl = `http://localhost:3000/projectUpdate`;
+            const backendURL = import.meta.env.VITE_BACKEND_URL;
+            const projectUrl = `${backendURL}/projectUpdate`;
             const response = await fetch(projectUrl, {
                 method: 'POST',
                 body: formData,

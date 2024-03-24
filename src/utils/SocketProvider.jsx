@@ -44,8 +44,9 @@ export default function useSocket() {
             console.log("Found auth token:", authToken)
 
             verifyControllerRef.current = new AbortController();
-
-            const verifyUrl = `http://localhost:3000/verify/${username}/${authToken}`
+            
+            const backendURL = import.meta.env.VITE_BACKEND_URL;
+            const verifyUrl = `${backendURL}/verify/${username}/${authToken}`
             const reponse = await fetch(verifyUrl, {
                 method: 'GET',
                 signal: verifyControllerRef.current.signal

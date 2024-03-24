@@ -59,7 +59,8 @@ const ProjectConfig = ({ props }) => {
         formData.append('status', "idle");
 
         try {
-            const projectUrl = `http://localhost:3000/projectUpdate`;
+            const backendURL = import.meta.env.VITE_BACKEND_URL;
+            const projectUrl = `${backendURL}/projectUpdate`;
             const response = await fetch(projectUrl, {
                 method: "POST",
                 body: formData,
@@ -113,7 +114,8 @@ const ProjectConfig = ({ props }) => {
 
 
         try {
-            const projectUrl = `http://localhost:3000/projectConfig`;
+            const backendURL = import.meta.env.VITE_BACKEND_URL;
+            const projectUrl = `${backendURL}/projectConfig`;
             const response = await fetch(projectUrl, {
                 method: "POST",
                 body: formData,
@@ -187,7 +189,7 @@ const ProjectConfig = ({ props }) => {
                     </div>
                 </div>
                 <div className="submit-field">
-                    <div id="next-btn" className="btn buttonFlat" onClick={gotoPreviousStage} >Return</div>
+                    <div id="return-btn" className="btn buttonFlat" onClick={gotoPreviousStage} >Return</div>
                     <div id="next-btn" className="btn buttonFilled" onClick={gotoNextStage} >Next</div>
                 </div>
             </div>

@@ -37,7 +37,8 @@ const ProjectList = () => {
         const userId = userData.userId;
 
         try {
-            const projectUrl = `http://localhost:3000/getProjects/${userId}`;
+            const backendURL = import.meta.env.VITE_BACKEND_URL;
+            const projectUrl = `${backendURL}/getProjects/${userId}`;
             const response = await fetch(projectUrl, {
                 method: 'GET',
                 headers: {
@@ -73,7 +74,8 @@ const ProjectList = () => {
                 projectName: projectName,
                 projectOwner: userData.userId
             }
-            const projectUrl = `http://localhost:3000/createProject/`;
+            const backendURL = import.meta.env.VITE_BACKEND_URL;
+            const projectUrl = `${backendURL}/createProject/`;
             const response = await fetch(projectUrl, {
                 method: 'POST',
                 headers: {

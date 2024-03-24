@@ -43,7 +43,8 @@ const ProjectResult = () => {
         const detailName = "full";
 
         try {
-            const projectUrl = `http://localhost:3000/getProjectDetails/${userId}/${projectId}?detail=${detailName}`;
+            const backendURL = import.meta.env.VITE_BACKEND_URL;
+            const projectUrl = `${backendURL}/getProjectDetails/${userId}/${projectId}?detail=${detailName}`;
             const response = await fetch(projectUrl, {
                 method: 'GET',
                 signal: controllerRef.current.signal

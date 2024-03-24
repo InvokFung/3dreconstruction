@@ -218,7 +218,8 @@ const ProjectUpload = ({ props }) => {
         });
 
         try {
-            const projectUrl = `http://localhost:3000/projectUpload`;
+            const backendURL = import.meta.env.VITE_BACKEND_URL;
+            const projectUrl = `${backendURL}/projectUpload`;
             const response = await fetch(projectUrl, {
                 method: "POST",
                 body: formData,

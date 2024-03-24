@@ -34,7 +34,8 @@ const ProjectProgress = ({ props }) => {
     }, [authChecked, authenticated]);
 
     const bindProgressListener = async (userId) => {
-        const source = new EventSource(`http://localhost:3000/process_image/${userId}/${projectId}`);
+        const backendURL = import.meta.env.VITE_BACKEND_URL;
+        const source = new EventSource(`${backendURL}/process_image/${userId}/${projectId}`);
 
         source.onerror = function (error) {
             console.log('EventSource connection error');
@@ -73,19 +74,7 @@ const ProjectProgress = ({ props }) => {
         const detailName = "progress";
 
         try {
-            const listener = await bindProgressListener(userId);
-            // const projectUrl = `http://localhost:3000/getProjectDetails/${userId}/${projectId}?detail=${detailName}`;
-            // const response = await fetch(projectUrl, {
-            //     method: 'GET',
-            //     signal: controllerRef.current.signal
-            // });
-            // const data = await response.json();
-            // if (data.status === 200) {
-            //     const progress = data.progress;
-            //     setProgress(progress);
-            // } else {
-            //     alert('Failed to load projects');
-            // }
+            const listener = await bindProgressListener(userId);            
         } catch (error) {
             console.log(error);
         }
