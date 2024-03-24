@@ -5,11 +5,13 @@
 
 .project-header-clean {
     padding-bottom: 5px;
-    font-size: 24px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 #project-result-main {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
 }
 
 .project-header {
@@ -19,13 +21,6 @@
     font-size: 24px;
 }
 
-.project-field {
-    background-color: #f0f0f0;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin: 20px 0;
-}
 
 .guide {
     background: rgb(150, 150, 150);
@@ -56,6 +51,12 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
 }
 
 #upload-guide {
@@ -260,7 +261,7 @@
     padding: 5px 20px;
     cursor: pointer;
     border-bottom: 1px solid transparent;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: bold;
 }
 

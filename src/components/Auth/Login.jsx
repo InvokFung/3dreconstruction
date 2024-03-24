@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { useNavigate } from 'react-router-dom';
 import Navbar from 'components/Navgbar';
 import useSocket from 'utils/SocketProvider';
@@ -69,15 +70,10 @@ const Login = () => {
             <Navbar></Navbar>
             <div className="authPage-container">
                 <div className='login-form'>
-                    {authenticated ? (
-                        <div>
-                            < h2>Welcome, {username}!</h2>
-                            <button className="btn btn-primary" onClick={handleLogout}>Logout</button>
-                        </div>
-                    ) : (
+                    {!authenticated && (
                         <>
                             <form onSubmit={handleLogin}>
-                                <h2>Login</h2>
+                                <div className='auth-header'>Login</div>
                                 <div className="form-group">
                                     <label>Username</label>
                                     <input

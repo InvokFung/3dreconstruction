@@ -105,8 +105,8 @@
   width: 100%;
   display: flex;
   padding: var(--dl-space-space-twounits);
-  max-width: 450px;
-  min-height: 450px;
+  max-width: 300px;
+  min-height: 300px;
   align-items: flex-start;
   font-family: Lato;
   flex-direction: column;
@@ -117,8 +117,8 @@
   width: 100%;
   display: flex;
   padding: var(--dl-space-space-twounits);
-  max-width: 450px;
-  min-height: 450px;
+  max-width: 300px;
+  min-height: 300px;
   align-items: flex-start;
   font-family: Lato;
   flex-direction: column;
@@ -129,8 +129,8 @@
   width: 100%;
   display: flex;
   padding: var(--dl-space-space-twounits);
-  max-width: 450px;
-  min-height: 450px;
+  max-width: 300px;
+  min-height: 300px;
   align-items: flex-start;
   font-family: Lato;
   flex-direction: column;
@@ -252,14 +252,14 @@
   text-transform: uppercase;
 }
 .heading1 {
-  font-size: 48px;
+  font-size: 32px;
   text-align: center;
   font-family: Raleway;
   font-weight: 700;
   line-height: 150%;
 }
 .bodyLarge {
-  font-size: 18px;
+  font-size: 16px;
   font-family: Lato;
   font-weight: 400;
   line-height: 150%;
@@ -272,7 +272,7 @@
   line-height: 150%;
 }
 .logo {
-  font-size: 2em;
+  font-size: 1.5em;
   font-family: Lato;
   font-weight: 700;
   line-height: 150%;
@@ -287,13 +287,13 @@
   text-decoration: none;
 }
 .heading2 {
-  font-size: 35px;
+  font-size: 28px;
   font-family: Raleway;
   font-weight: 600;
   line-height: 150%;
 }
 .bodySmall {
-  font-size: 16px;
+  font-size: 15px;
   font-family: Lato;
   font-weight: 400;
   line-height: 150%;

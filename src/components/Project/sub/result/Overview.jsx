@@ -375,7 +375,7 @@ const Overview = ({ projectData }) => {
                         )}
                     </div>
                     <div className='rcs-parameter'>
-                        <div className='rp-content'>
+                        <div className='overview-config-wrapper'>
                             <div className='rp-item'>
                                 <div>Object Depth</div>
                                 <div className='multiInput'>

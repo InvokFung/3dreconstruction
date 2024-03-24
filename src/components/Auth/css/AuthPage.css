@@ -1,5 +1,8 @@
-.authPage-container {
-    padding: 15px;
+
+.auth-header {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
 
 .form-control {
@@ -17,12 +20,13 @@
 
 .authPage-container,
 .profile-container {
-    padding: 20px;
+    padding: 20px 50px;
 }
 
 .login-form,
 .register-form,
-.profile {
+.profile {    
+    max-width: 900px;
     background-color: #f0f0f0;
     padding: 20px;
     border-radius: 5px;

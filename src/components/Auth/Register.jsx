@@ -65,15 +65,10 @@ const Register = () => {
             <Navbar></Navbar>
             <div className="authPage-container">
                 <div className="register-form">
-                    {authenticated ? (
-                        <div>
-                            < h2>Welcome, {username}!</h2>
-                            <button className="btn btn-primary">Logout</button>
-                        </div>
-                    ) : (
+                    {!authenticated && (
                         <>
                             <form onSubmit={handleRegister}>
-                                <h2>Sign-up</h2>
+                                <div className='auth-header'>Sign-up</div>
                                 <div className="form-group">
                                     <label>Username</label>
                                     <input

@@ -47,7 +47,7 @@
   justify-content: space-between;
 }
 .home-login {
-  margin-right: 32px;
+  margin-right: 10px;
 }
 .home-burger-menu {
   display: none;
@@ -234,12 +234,15 @@
 .home-container07 {
   display: flex;
   align-items: center;
-  margin-bottom: var(--dl-space-space-twounits);
+  margin-bottom: 15px;
+  flex-wrap: wrap;
   flex-direction: row;
 }
 .home-text37 {
   font-size: 1.15rem;
-  margin-top: var(--dl-space-space-twounits);
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
   font-weight: 300;
 }
 .home-free-plan-price {
@@ -652,7 +655,7 @@
   .home-pricing-card {
     width: 100%;
     padding: var(--dl-space-space-twounits);
-    max-width: 450px;
+    max-width: 200px;
   }
   .home-pricing-card1 {
     width: 100%;

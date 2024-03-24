@@ -36,7 +36,7 @@ const Profile = () => {
             <Navbar></Navbar>
             <div className='profile-container'>
                 <div className='profile'>
-                    < h2>Welcome, {username}!</h2>
+                    <div className='auth-header'>Welcome, {username}!</div>
                     <button className="btn buttonFilled" onClick={viewProjectList}>View your projects</button>
                 </div>
             </div>

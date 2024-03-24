@@ -145,25 +145,26 @@ const Result = ({ projectData }) => {
                         )}
                     </div>
                 </div>
-                {!error ? (
-                    <div ref={mainContainer} className='rcs-container'>
-                        {resultRetrieved ? (
-                            <div className='result-field' ref={resultField}></div>
-                        ) : (
-                            <div className='result-wait-field'>
-                                <p>Preparing your reconstructed model . . .</p>
-                                <p>This could take a few minutes. Thank you for your patience.</p>
-                            </div>
-                        )}
-                    </div>
-                ) : (
-                    <div className='result-error-field'>
-                        <p>There is an error occured during reconstruction.</p>
-                        <p>Please go to [ Overview ] tab to restart the process.</p>
-                    </div>
-
-                )}
-            </div>
+                <div ref={mainContainer} className='rcs-container'>
+                    {!error ? (
+                        <>
+                            {resultRetrieved ? (
+                                <div className='result-field' ref={resultField}></div>
+                            ) : (
+                                <div className='result-wait-field'>
+                                    <p>Preparing your reconstructed model . . .</p>
+                                    <p>This could take a few minutes. Thank you for your patience.</p>
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <div className='result-error-field'>
+                            <p>There is an error occured during reconstruction.</p>
+                            <p>Please go to [ Overview ] tab to restart the process.</p>
+                        </div>
+                    )}
+                </div>
+            </div >
         </>
     )
 };

@@ -1,5 +1,5 @@
 .home-container {
-    padding: 20px;
+    padding: 20px;    
 }
 
 .home-hero {
@@ -7,7 +7,7 @@
     width: 100%;
     height: auto;
     display: flex;
-    margin: 100px 0;
+    margin: 140px 0;
     align-items: flex-start;
     justify-content: center;
 }
