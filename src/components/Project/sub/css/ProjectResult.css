@@ -101,6 +101,11 @@
 }
 
 /* Project Progress Bar */
+
+.progress.error {
+    --bs-progress-bar-bg: rgb(252, 85, 80);
+}
+
 #project-progressbar-wrapper {
     height: 30px;
 }

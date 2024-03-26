@@ -94,13 +94,13 @@ const ProjectUpload = ({ props }) => {
     }, [authChecked, authenticated]);
 
     //
-    const fileInput = useRef();
     const imageController = useRef();
 
     let isSubmitting = false;
     const [checked, setChecked] = useState(false);
     const [uploaded, setUploaded] = useState(false);
     const [images, setImages] = useState([]);
+    const [nextBtnContent, setNextBtnContent] = useState("Next");
 
     const handleAddImage = (event) => {
         const input = document.createElement('input');
@@ -201,6 +201,7 @@ const ProjectUpload = ({ props }) => {
             return;
         }
         isSubmitting = true;
+        setNextBtnContent("Saving...");
 
         if (imageController.current)
             imageController.current.abort();
@@ -234,6 +235,7 @@ const ProjectUpload = ({ props }) => {
         } catch (error) {
             console.log(error);
             isSubmitting = false;
+            setNextBtnContent("Next");
         }
     }
 
@@ -310,7 +312,7 @@ const ProjectUpload = ({ props }) => {
                 </div>
                 <div className="submit-field">
                     {checked && (
-                        <div id="next-btn" className="btn buttonFilled" onClick={gotoNextStage} >Next</div>
+                        <div id="next-btn" className="btn buttonFilled" onClick={gotoNextStage} >{nextBtnContent}</div>
                     )}
                 </div>
             </div>

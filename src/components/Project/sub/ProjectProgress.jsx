@@ -25,6 +25,8 @@ const ProjectProgress = ({ props }) => {
     const { projectId } = useParams();
     const navigateTo = useNavigate();
 
+    const [hasError, setError] = useState(false);
+
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
@@ -40,6 +42,8 @@ const ProjectProgress = ({ props }) => {
         source.onerror = function (error) {
             console.log('EventSource connection error');
             console.error(error)
+            if (!hasError)
+                setError(true);
         };
 
         let localProgress = 0;
@@ -48,6 +52,7 @@ const ProjectProgress = ({ props }) => {
             source.onmessage = function (event) {
                 if (event.data === 'READY') {
                     resolve(source);
+                    setError(false);
                 } else if (event.data === 'CLOSE') {
                     source.close();
                     if (localProgress != 100) {
@@ -73,11 +78,7 @@ const ProjectProgress = ({ props }) => {
         const userId = userData.userId;
         const detailName = "progress";
 
-        try {
-            const listener = await bindProgressListener(userId);            
-        } catch (error) {
-            console.log(error);
-        }
+        const listener = await bindProgressListener(userId);
     }
 
     // =============================================================
@@ -86,8 +87,8 @@ const ProjectProgress = ({ props }) => {
         <>
             <div className="project-progress">
                 <div className='project-header'>Project {projectId} - New Project</div>
-                <div className='progressbar-header'>Processing the reconstruction ...</div>
-                <div id="project-progressbar-wrapper" className="progress">
+                <div className='progressbar-header'>{hasError ? "An error has occured during reconstruction, please refresh." : "Processing the reconstruction ..."}</div>
+                <div id="project-progressbar-wrapper" className={`progress ${hasError ? "error" : ""}`}>
                     <div id="project-progressbar" className="progress-bar progress-bar-striped active animate" role="progressbar" aria-valuenow={progress} aria-valuemin="0" aria-valuemax="100" style={{ width: `${progress}%` }}>
                         {progress}%
                     </div>

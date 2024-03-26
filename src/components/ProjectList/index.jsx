@@ -157,7 +157,7 @@ const ProjectList = () => {
                     <div className="modal-content">
                         <div className="modal-header">
                             <div className='modal-title'>Project Setup</div>
-                            <span className="close-button" onClick={closeModal}>&times;</span>
+                            <span className="modal-close-button" onClick={closeModal}>&times;</span>
                         </div>
                         <form onSubmit={createProject}>
                             <div>Project Name</div>

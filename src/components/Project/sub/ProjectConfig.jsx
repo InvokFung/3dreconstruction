@@ -35,6 +35,8 @@ const ProjectConfig = ({ props }) => {
 
     const configController = useRef();
 
+    const [nextBtnContent, setNextBtnContent] = useState("Next");
+
     let isSubmitting = false;
 
     const gotoPreviousStage = async () => {
@@ -84,6 +86,7 @@ const ProjectConfig = ({ props }) => {
             return;
         }
         isSubmitting = true;
+        setNextBtnContent("Saving...");
 
         if (configController.current)
             configController.current.abort();
@@ -130,6 +133,7 @@ const ProjectConfig = ({ props }) => {
         } catch (error) {
             console.log(error);
             isSubmitting = false;
+            setNextBtnContent("Saving...");
         }
     }
 
@@ -190,7 +194,7 @@ const ProjectConfig = ({ props }) => {
                 </div>
                 <div className="submit-field">
                     <div id="return-btn" className="btn buttonFlat" onClick={gotoPreviousStage} >Return</div>
-                    <div id="next-btn" className="btn buttonFilled" onClick={gotoNextStage} >Next</div>
+                    <div id="next-btn" className="btn buttonFilled" onClick={gotoNextStage} >{nextBtnContent}</div>
                 </div>
             </div>
         </>
