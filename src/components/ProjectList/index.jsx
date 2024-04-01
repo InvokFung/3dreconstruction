@@ -17,6 +17,7 @@ const ProjectList = () => {
     } = useSocket();
 
     const { projectId } = useParams();
+    const [projectChecked, setProjectChecked] = useState(false);
     const [projectList, setProjectList] = useState([]);
     const navigateTo = useNavigate();
 
@@ -50,6 +51,7 @@ const ProjectList = () => {
             console.log(data)
             if (data.status === 200) {
                 setProjectList(data.projects);
+                setProjectChecked(true);
             } else {
                 alert('Failed to load projects');
             }
@@ -127,31 +129,42 @@ const ProjectList = () => {
                     <div className='project-list-title'>Your Projects</div>
                     <div className="redirect btn" onClick={openModal}>Create Project</div>
                 </div>
-                <div className='table-wrapper'>
-                    <table className="styled-table">
-                        <thead>
-                            <tr>
-                                <th>Project Id</th>
-                                <th>Project Name</th>
-                                <th>Create Date</th>
-                                <th>Status</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {projectList.map((project, index) => (
-                                <tr key={index}>
-                                    <td>{project.projectId}</td>
-                                    <td>{project.projectName}</td>
-                                    <td>{formatDate(project.projectDate)}</td>
-                                    <td>{project.projectStatus.charAt(0).toUpperCase() + project.projectStatus.slice(1)}</td>
-                                    <td><button className='redirect' onClick={() => viewProject(project.projectId)}>Browse</button></td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                {
+                    projectChecked && (
+                        projectList.length == 0 ? (
+                            <div className='project-list-empty'>
+                                <div>It looks like you haven't started any projects yet.</div>
+                                <div>Why not create one and bring your ideas to life?</div>
+                            </div>
+                        ) : (
+                            <div className='table-wrapper'>
+                                <table className="styled-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Project Id</th>
+                                            <th>Project Name</th>
+                                            <th>Create Date</th>
+                                            <th>Status</th>
+                                            <th></th>
+                                        </tr >
+                                    </thead >
+                                    <tbody>
+                                        {projectList.map((project, index) => (
+                                            <tr key={index}>
+                                                <td>{project.projectId}</td>
+                                                <td>{project.projectName}</td>
+                                                <td>{formatDate(project.projectDate)}</td>
+                                                <td>{project.projectStatus.charAt(0).toUpperCase() + project.projectStatus.slice(1)}</td>
+                                                <td><button className='redirect' onClick={() => viewProject(project.projectId)}>Browse</button></td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table >
+                            </div >
+                        )
+                    )
+                }
+            </div >
             {showModal && (
                 <div className="project-modal">
                     <div className="modal-content">

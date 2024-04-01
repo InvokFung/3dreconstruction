@@ -170,9 +170,8 @@ const Main = () => {
                         <div className="home-container30">
                             <span className="logo">RECONSTRUCT</span>
                             <nav className="home-nav1">
-                                <span className="pointer bodySmall">Home</span>
-                                <span className="pointer home-nav222 bodySmall">Guide</span>
-                                <span className="pointer home-nav322 bodySmall">Gallery</span>
+                                <span className="pointer bodySmall" onClick={() => navigateTo("/")}>Home</span>                                
+                                <span className="pointer home-nav322 bodySmall" onClick={() => navigateTo("/samples")}>Samples</span>
                                 <span className="pointer home-nav422 bodySmall">FAQ</span>
                                 <span className="pointer home-nav522 bodySmall">Contact</span>
                             </nav>

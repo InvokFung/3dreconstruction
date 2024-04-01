@@ -9,6 +9,7 @@ import { SocketProvider } from "utils/SocketProvider"
 import Project from "components/Project"
 import ProjectList from "components/ProjectList"
 import ProjectResult from "components/Project/sub/ProjectResult"
+import SamplePage from "components/SamplePage"
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route exact path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/samples" element={<SamplePage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/projects" element={<ProjectList />} />
           <Route path="/project/:projectId" element={<Project />} />
