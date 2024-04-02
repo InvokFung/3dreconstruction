@@ -22,7 +22,7 @@ function Menu() {
     };
 
     return (
-        <div className="menu-container home-desktop-menu">
+        <div className="menu-container">
             <nav className="home-links">
                 <span className="menuItem bodySmall" onClick={() => navigateTo("/")}>Home</span>
                 {(authChecked && authenticated) ? (

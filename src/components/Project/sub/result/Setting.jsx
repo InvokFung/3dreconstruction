@@ -77,7 +77,7 @@ const Setting = ({ projectData }) => {
 
     return (
         <>
-            <div className="project background-field">
+            <div className="project-setting background-field">
                 <div className='setting-tab'>
                     <div className="setting-header">General</div>
                     <div className="setting-section">

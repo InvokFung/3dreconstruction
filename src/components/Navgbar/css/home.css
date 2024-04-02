@@ -46,9 +46,6 @@
   flex-direction: row;
   justify-content: space-between;
 }
-.home-login {
-  margin-right: 10px;
-}
 .home-burger-menu {
   display: none;
 }

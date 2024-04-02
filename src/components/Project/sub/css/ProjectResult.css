@@ -46,7 +46,7 @@
 
 #project-overview {
     padding-bottom: 50px;
-    min-width: 960px;
+    /* min-width: 960px; */
 }
 
 .overview-section {
@@ -158,6 +158,8 @@
     color: rgb(125, 125, 125);
     display: flex;
     justify-content: space-between;
+    overflow: hidden;
+    gap: 10px;
 }
 
 .rcs-container {
@@ -181,6 +183,7 @@
     height: 100%;
     position: relative;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 .result-field canvas {
@@ -188,6 +191,10 @@
     height: 100%;
     outline: none;
     border: none;
+}
+
+.result-wait-field {
+    padding: 20px;
 }
 
 .result-wait-field,
@@ -209,8 +216,13 @@
 
 /* Setting */
 
+.project-setting {
+    width: 90%;
+    max-width: 750px;
+}
+
 .setting-tab {
-    width: 750px;
+    width: 100%;
     color: rgb(125, 125, 125);
 }
 
@@ -308,4 +320,21 @@
 
 .danger-desc {
     color: rgb(90, 90, 90);
+}
+
+@media screen and (max-width: 900px) {
+
+    .section-input {
+        width: min(300px, 100%);
+    }
+
+    .section-btn {
+        display: block;
+        margin-top: 10px;
+        margin-left: 0;
+    }
+    
+    .danger-field {
+        flex-direction: column;
+    }
 }

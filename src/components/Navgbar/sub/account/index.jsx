@@ -38,7 +38,7 @@ function Authentication() {
                     <div className="buttonFilled btn" onClick={handleLogout}>Logout</div>
                 </>
             ) : (
-                <div className="home-buttons">
+                <div className="auth-button-wrapper">
                     <div className="btn home-login buttonFlat" onClick={() => navigateTo("/login")}>Login</div>
                     <div className="btn buttonFilled" onClick={() => navigateTo("/register")}>Register</div>
                 </div>

@@ -1,7 +1,7 @@
 #project-list {
     padding: 30px 50px 30px;
-    min-width: 700px;
-    max-width: 900px;
+    /* min-width: 700px; */
+    /* max-width: 900px; */    
 }
 
 .project-list-header {
@@ -9,6 +9,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    overflow: hidden;
 }
 
 .project-list-title {

@@ -235,20 +235,20 @@ const Overview = ({ projectData }) => {
 
     function renameFile(newFile, existingFileNames) {
         let newFileName = newFile.name;
-    
+
         if (existingFileNames.includes(newFileName)) {
             const fileNameParts = newFileName.split('.');
             const fileExtension = fileNameParts.pop();
             const fileName = fileNameParts.join('.');
             newFileName = `${fileName}_1.${fileExtension}`;
             let count = 2;
-    
+
             while (existingFileNames.includes(newFileName)) {
                 newFileName = `${fileName}_${count}.${fileExtension}`;
                 count++;
             }
         }
-    
+
         return new File([newFile], newFileName, { type: newFile.type });
     }
 
@@ -256,7 +256,7 @@ const Overview = ({ projectData }) => {
         event.preventDefault();
     }
 
-    const handleDrop = (event) => {        
+    const handleDrop = (event) => {
         event.preventDefault();
         if (!imgEdit) return;
 
@@ -365,13 +365,15 @@ const Overview = ({ projectData }) => {
                             <span>Configuration</span>
                             {updateConfigStatus && <Reminder status={updateConfigStatus} key={updateConfigStatus} />}
                         </div>
-                        {!configEdit ? (
-                            <div className='section-btn' onClick={() => setConfigEdit(true)}>Edit</div>
-                        ) : (
-                            <div>
-                                <div className='section-btn' onClick={cancelEditConfig}>Cancel</div>
-                                <div className='section-btn' onClick={(event) => updateProject(event, "config")}>Save</div>
-                            </div>
+                        {updateConfigStatus == null && (
+                            !configEdit ? (
+                                <div className='section-btn' onClick={() => setConfigEdit(true)}>Edit</div>
+                            ) : (
+                                <div>
+                                    <div className='section-btn' onClick={cancelEditConfig}>Cancel</div>
+                                    <div className='section-btn' onClick={(event) => updateProject(event, "config")}>Save</div>
+                                </div>
+                            )
                         )}
                     </div>
                     <div className='rcs-parameter'>
@@ -453,13 +455,15 @@ const Overview = ({ projectData }) => {
                             <span>Source Images</span>
                             {updateImageStatus && <Reminder status={updateImageStatus} key={updateImageStatus} />}
                         </div>
-                        {!imgEdit ? (
-                            <div className='section-btn' onClick={() => setImgEdit(true)}>Edit</div>
-                        ) : (
-                            <div>
-                                <div className='section-btn' onClick={cancelEditImg}>Cancel</div>
-                                <div className='section-btn' onClick={(event) => updateProject(event, "image")}>Save</div>
-                            </div>
+                        {updateImageStatus == null && (
+                            !imgEdit ? (
+                                <div className='section-btn' onClick={() => setImgEdit(true)}>Edit</div>
+                            ) : (
+                                <div>
+                                    <div className='section-btn' onClick={cancelEditImg}>Cancel</div>
+                                    <div className='section-btn' onClick={(event) => updateProject(event, "image")}>Save</div>
+                                </div>
+                            )
                         )}
                     </div>
                     <div className="image-container"

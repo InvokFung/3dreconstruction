@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './css/Navbar.css'
 import Authentication from './sub/account';
 import Menu from './sub/menu';
+import MobileMenu from './sub/mobile';
 import "./css/home.css";
 import "./css/style.css";
 
@@ -18,6 +19,7 @@ const Navbar = () => {
             <span className="logo logo-white" onClick={toHome}>WEBRECON</span>            
             <Menu></Menu>
             <Authentication></Authentication>
+            <MobileMenu></MobileMenu>
         </div>
     );
 }

@@ -45,7 +45,7 @@
 
 .project-field {
     width: 70%;
-    min-width: 860px;
+    /* min-width: 860px; */
     max-width: 1200px;
     position: absolute;
     top: 50%;

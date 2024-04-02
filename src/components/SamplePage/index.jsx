@@ -29,7 +29,7 @@ const SamplePage = () => {
         {
             name: "switch",
             prefix: "b",
-            count: 19,
+            count: 18,
             suffix: ".png"
         }
     ]
@@ -59,7 +59,7 @@ const SamplePage = () => {
             <Navbar></Navbar>
             <div id="project-sample" className="project-field">
                 {samples.map((sample, sample_index) => (
-                    <div className='project-sample-wrapper'>
+                    <div key={sample_index} className='project-sample-wrapper'>
                         <div className='project-sample-header'>
                             <div className='project-list-title'>{`Sample ${sample_index + 1}`}</div>
                             <div className="redirect btn" onClick={() => downloadSample(sample.name)}>Download</div>
