@@ -74,7 +74,8 @@
     margin-top: 20px;
 }
 
-.project-list-empty {
+.project-list-empty,
+.project-list-loading {
     color: rgb(120, 120, 120);
     background: rgb(245, 245, 245);
     border-radius: 6px;

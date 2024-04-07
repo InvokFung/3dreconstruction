@@ -22,9 +22,14 @@ const ProjectList = () => {
     const navigateTo = useNavigate();
 
     useEffect(() => {
+        if (authChecked && authenticated && !projectChecked)
+            loadProjects();
+    }, [])
+
+    useEffect(() => {
         if (authChecked && !authenticated) {
             navigateTo('/login');
-        } else if (authChecked && authenticated) {
+        } else if (authChecked && authenticated && !projectChecked) {
             loadProjects();
         }
     }, [authChecked, authenticated]);
@@ -130,7 +135,7 @@ const ProjectList = () => {
                     <div className="redirect btn" onClick={openModal}>Create Project</div>
                 </div>
                 {
-                    projectChecked && (
+                    projectChecked ? (
                         projectList.length == 0 ? (
                             <div className='project-list-empty'>
                                 <div>It looks like you haven't started any projects yet.</div>
@@ -162,6 +167,10 @@ const ProjectList = () => {
                                 </table >
                             </div >
                         )
+                    ) : (
+                        <div className='project-list-loading'>
+                            <div>Loading projects...</div>
+                        </div>
                     )
                 }
             </div >

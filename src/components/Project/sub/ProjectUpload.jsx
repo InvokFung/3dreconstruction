@@ -100,6 +100,7 @@ const ProjectUpload = ({ props }) => {
     const [checked, setChecked] = useState(false);
     const [uploaded, setUploaded] = useState(false);
     const [images, setImages] = useState([]);
+    const [openGuide, setOpenGuide] = useState(false);
     const [nextBtnContent, setNextBtnContent] = useState("Next");
 
     const handleAddImage = (event) => {
@@ -260,7 +261,7 @@ const ProjectUpload = ({ props }) => {
             <div id="project-upload" className="project-field">
                 <div id="upload-header-wrapper" className='project-header-clean'>
                     <span>Step 1. Upload your images</span>
-                    <div id="upload-guide" className="guide" title="View Guideline">?</div>
+                    <div id="upload-guide" className="guide" title="View Guideline" onClick={() => setOpenGuide(true)}>?</div>
                 </div>
 
                 <div className="upload-form">
@@ -316,6 +317,27 @@ const ProjectUpload = ({ props }) => {
                     )}
                 </div>
             </div>
+            {openGuide && (
+                <div className='guide-wrapper' onClick={() => setOpenGuide(false)}>
+                    <div className='guide-container' onClick={(e) => e.stopPropagation()}>
+                        <div className='guide-header'>
+                            <span>Uploading Guideline</span>
+                            <div
+                                className='guide-close pointer'
+                                onClick={() => setOpenGuide(false)}                                
+                            >
+                                &#10060;
+                            </div>
+                        </div>
+                        <div className='guide-content'>
+                            <div>1. Upload at least 8 images of your object from various views.</div>
+                            <div>2. Make sure the background of images are clean and well-lit.</div>
+                            <div>3. Avoid using images with watermarks or logos.</div>
+                            <div>4. Use images with a resolution of at most 640x480 pixels.</div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     )
 };
