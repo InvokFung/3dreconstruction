@@ -90,6 +90,8 @@
 
 .mobile-menu-icon {
     display: none;
+    border: none;
+    padding: 5px 10px;
 }
 
 @media screen and (max-width: 900px) {

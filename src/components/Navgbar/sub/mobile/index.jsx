@@ -66,7 +66,7 @@ function MobileMenu() {
                             </>
                         ) : (<></>)}
                         <span className="menuItem bodySmall" onClick={() => handleNavigation("/samples")}>Samples</span>
-                        <span className="menuItem bodySmall">FAQ</span>
+                        <span className="menuItem bodySmall" onClick={() => window.open("https://github.com/InvokFung/3dreconstruction-api")}>Github</span>
                         <span className="menuItem bodySmall">Contact</span>
                         {authenticated ? (
                             <>

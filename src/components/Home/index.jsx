@@ -160,7 +160,7 @@ const Main = () => {
                         </h1>
                         <span className="home-banner-sub-heading bodySmall">
                             <div>Our innovative approach transforms 2D images into detailed 3D point cloud models, adding a new dimension to your visuals.</div>
-                            <div>Leveraging advanced Python algorithms and the power of Three.js for visualization, we deliver high-precision 3D reconstructions.</div>
+                            <div>Through sophisticated Python algorithms and the immersive capabilities of Three.js, we ensure precise and immersive 3D reconstructions.</div>
                         </span>
                         <div className="btn buttonFilled" onClick={getStarted}>Learn More</div>
                     </div>
@@ -172,8 +172,8 @@ const Main = () => {
                             <nav className="home-nav1">
                                 <span className="pointer bodySmall" onClick={() => navigateTo("/")}>Home</span>                                
                                 <span className="pointer home-nav322 bodySmall" onClick={() => navigateTo("/samples")}>Samples</span>
-                                <span className="pointer home-nav422 bodySmall">FAQ</span>
-                                <span className="pointer home-nav522 bodySmall">Contact</span>
+                                <span className="pointer home-nav422 bodySmall" onClick={() => window.open("https://github.com/InvokFung/3dreconstruction-api")}>Github</span>
+                                <span className="pointer home-nav522 bodySmall" onClick={() => window.scrollTo(0, 0)}>Go to Top</span>
                             </nav>
                         </div>
                         <div className="home-separator"></div>

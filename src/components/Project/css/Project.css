@@ -151,6 +151,10 @@
     margin-top: 10px;
 }
 
+#project-preset {
+    max-width: 900px;
+}
+
 /* Progress */
 
 .project-progress {
@@ -289,6 +293,8 @@
     border: 1px solid gray;
     padding: 30px;
     border-radius: 5px;
+    overflow: auto;
+    height: 70%;
 }
 
 .guide-header {
@@ -302,4 +308,24 @@
 
 .guide-content {
     padding: 15px 10px;
+}
+
+.guide-content div {
+    margin: 10px 0;
+}
+
+.guide-content img {
+    width: 60px;
+}
+
+#fl_showcase {
+    width: 300px;
+}
+
+#depth_showcase {
+    width: 250px;
+}
+
+#cp_showcase {
+    width: 300px;
 }

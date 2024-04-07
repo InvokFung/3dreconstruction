@@ -324,13 +324,26 @@ const ProjectUpload = ({ props }) => {
                             <span>Uploading Guideline</span>
                             <div
                                 className='guide-close pointer'
-                                onClick={() => setOpenGuide(false)}                                
+                                onClick={() => setOpenGuide(false)}
                             >
                                 &#10060;
                             </div>
                         </div>
                         <div className='guide-content'>
                             <div>1. Upload at least 8 images of your object from various views.</div>
+                            <div>
+                                <div>Example views:</div>
+                                <div>                                    
+                                    <img src="/3dreconstruction/sample/switch/rgb/b1.png" title="front"/>
+                                    <img src="/3dreconstruction/sample/switch/rgb/b3.png" title="front sideways"/>
+                                    <img src="/3dreconstruction/sample/switch/rgb/b5.png" title="left"/>
+                                    <img src="/3dreconstruction/sample/switch/rgb/b6.png" title="left sideways"/>
+                                    <img src="/3dreconstruction/sample/switch/rgb/b9.png" title="back"/>
+                                    <img src="/3dreconstruction/sample/switch/rgb/b12.png" title="back sideways"/>
+                                    <img src="/3dreconstruction/sample/switch/rgb/b14.png" title="right"/>
+                                    <img src="/3dreconstruction/sample/switch/rgb/b15.png" title="right sideways"/>
+                                </div>                                
+                            </div>
                             <div>2. Make sure the background of images are clean and well-lit.</div>
                             <div>3. Avoid using images with watermarks or logos.</div>
                             <div>4. Use images with a resolution of at most 640x480 pixels.</div>
