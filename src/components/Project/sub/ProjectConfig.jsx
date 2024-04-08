@@ -32,6 +32,8 @@ const ProjectConfig = ({ props }) => {
     const fyVal = useRef();
     const cxVal = useRef();
     const cyVal = useRef();
+    const epsVal = useRef();
+    const minPtsVal = useRef();
 
     const configController = useRef();
 
@@ -107,7 +109,9 @@ const ProjectConfig = ({ props }) => {
             fx: Number(fxVal.current.value),
             fy: Number(fyVal.current.value),
             cx: Number(cxVal.current.value),
-            cy: Number(cyVal.current.value)
+            cy: Number(cyVal.current.value),
+            eps: Number(epsVal.current.value),
+            minPts: Number(minPtsVal.current.value)
         };
 
         // Convert parameters to JSON string
@@ -156,11 +160,11 @@ const ProjectConfig = ({ props }) => {
                                 <div className='multiInput'>
                                     <div className='halfText'>
                                         <label>min</label>
-                                        <input className='halfInput' type='number' step="0.01" ref={depthMinVal} defaultValue={0} />
+                                        <input className='halfInput' type='number' step="0.01" ref={depthMinVal} defaultValue={-1} />
                                     </div>
                                     <div className='halfText'>
                                         <label>max</label>
-                                        <input className='halfInput' type='number' step="0.01" ref={depthMaxVal} defaultValue={0} />
+                                        <input className='halfInput' type='number' step="0.01" ref={depthMaxVal} defaultValue={-1} />
                                     </div>
                                 </div>
                             </div>
@@ -169,11 +173,11 @@ const ProjectConfig = ({ props }) => {
                                 <div className='multiInput'>
                                     <div className='halfText'>
                                         <label>fx</label>
-                                        <input className='halfInput' type='number' step="0.01" ref={fxVal} defaultValue={0} />
+                                        <input className='halfInput' type='number' step="0.01" ref={fxVal} defaultValue={-1} />
                                     </div>
                                     <div className='halfText'>
                                         <label>fy</label>
-                                        <input className='halfInput' type='number' step="0.01" ref={fyVal} defaultValue={0} />
+                                        <input className='halfInput' type='number' step="0.01" ref={fyVal} defaultValue={-1} />
                                     </div>
                                 </div>
                             </div>
@@ -182,11 +186,24 @@ const ProjectConfig = ({ props }) => {
                                 <div className='multiInput'>
                                     <div className='halfText'>
                                         <label>cx</label>
-                                        <input className='halfInput' type='number' step="0.01" ref={cxVal} defaultValue={0} />
+                                        <input className='halfInput' type='number' step="0.01" ref={cxVal} defaultValue={-1} />
                                     </div>
                                     <div className='halfText'>
                                         <label>cy</label>
-                                        <input className='halfInput' type='number' step="0.01" ref={cyVal} defaultValue={0} />
+                                        <input className='halfInput' type='number' step="0.01" ref={cyVal} defaultValue={-1} />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='rp-item'>
+                                <div>Cluster filtering</div>
+                                <div className='multiInput'>
+                                    <div className='halfText'>
+                                        <label>eps threshold</label>
+                                        <input className='halfInput' type='number' step="0.01" ref={epsVal} defaultValue={-1} />
+                                    </div>
+                                    <div className='halfText'>
+                                        <label>min points</label>
+                                        <input className='halfInput' type='number' step="0.01" ref={minPtsVal} defaultValue={-1} />
                                     </div>
                                 </div>
                             </div>

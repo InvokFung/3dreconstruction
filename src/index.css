@@ -98,10 +98,19 @@ h1 {
 
 .form-group {
   font-size: 0.95rem;
+  color: #646464;
+  border-color: black;
 }
 
 button {
-  font-size: 0.7rem;  
+  font-size: 0.7rem;
+  background-color: #F9F9F9;
+}
+
+input {
+  background: white;
+  border: 1px solid gray;
+  padding: 2px 8px;
 }
 
 .form-group input {

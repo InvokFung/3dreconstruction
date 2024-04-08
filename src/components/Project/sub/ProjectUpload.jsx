@@ -344,8 +344,11 @@ const ProjectUpload = ({ props }) => {
                                     <img src="/3dreconstruction/sample/switch/rgb/b15.png" title="right sideways"/>
                                 </div>                                
                             </div>
+                            <hr />
                             <div>2. Make sure the background of images are clean and well-lit.</div>
+                            <hr />
                             <div>3. Avoid using images with watermarks or logos.</div>
+                            <hr />
                             <div>4. Use images with a resolution of at most 640x480 pixels.</div>
                         </div>
                     </div>

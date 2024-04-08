@@ -46,6 +46,8 @@
     font-size: 0.9rem;
     cursor: pointer;
     text-align: center;
+    border: 4px double rgb(165, 165, 165);
+    border-radius: 2px;
 }
 
 .auth-button-wrapper {
@@ -55,7 +57,7 @@
 
 .user-icon {
     width: 15px;
-    margin-right: 5px;
+    margin-right: 5px;    
 }
 
 /* Menu */

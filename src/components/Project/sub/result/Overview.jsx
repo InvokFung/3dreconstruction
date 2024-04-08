@@ -45,9 +45,14 @@ const Overview = ({ projectData }) => {
     const fyVal = useRef();
     const cxVal = useRef();
     const cyVal = useRef();
+    const epsVal = useRef();
+    const minPtsVal = useRef();
 
     const projectController = useRef();
     const configController = useRef();
+
+    const [openConfigGuide, setOpenConfigGuide] = useState(false);
+    const [openImgGuide, setOpenImgGuide] = useState(false);
 
     const [updateImageStatus, setUpdateImageStatus] = useState(null);
     const [updateConfigStatus, setUpdateConfigStatus] = useState(null);
@@ -363,6 +368,7 @@ const Overview = ({ projectData }) => {
                     <div className="section-header">
                         <div className='section-title'>
                             <span>Configuration</span>
+                            <div id="upload-guide" className="guide" title="View Guideline" onClick={() => setOpenConfigGuide(true)}>?</div>
                             {updateConfigStatus && <Reminder status={updateConfigStatus} key={updateConfigStatus} />}
                         </div>
                         {updateConfigStatus == null && (
@@ -446,6 +452,29 @@ const Overview = ({ projectData }) => {
                                     </div>
                                 </div>
                             </div>
+                            <div className='rp-item'>
+                                <div>Cluster filtering</div>
+                                <div className='multiInput'>
+                                    <div className='halfText'>
+                                        <label>eps threshold</label>
+                                        <input className='halfInput' type='number' step="0.01"
+                                            ref={epsVal}
+                                            value={config.eps}
+                                            onChange={e => handleInputChange(e, 'eps')}
+                                            disabled={!configEdit}
+                                        />
+                                    </div>
+                                    <div className='halfText'>
+                                        <label>min points</label>
+                                        <input className='halfInput' type='number' step="0.01"
+                                            ref={minPtsVal}
+                                            value={config.minPts}
+                                            onChange={e => handleInputChange(e, 'minPts')}
+                                            disabled={!configEdit}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -453,6 +482,7 @@ const Overview = ({ projectData }) => {
                     <div className="section-header">
                         <div className='section-title'>
                             <span>Source Images</span>
+                            <div id="upload-guide" className="guide" title="View Guideline" onClick={() => setOpenImgGuide(true)}>?</div>
                             {updateImageStatus && <Reminder status={updateImageStatus} key={updateImageStatus} />}
                         </div>
                         {updateImageStatus == null && (
@@ -497,6 +527,103 @@ const Overview = ({ projectData }) => {
                     </div>
                 </div>
             </div >
+
+            {openConfigGuide && (
+                <div className='guide-wrapper' onClick={() => setOpenConfigGuide(false)}>
+                    <div className='guide-container' onClick={(e) => e.stopPropagation()}>
+                        <div className='guide-header'>
+                            <span>Configuring Guideline</span>
+                            <div
+                                className='guide-close pointer'
+                                onClick={() => setOpenConfigGuide(false)}
+                            >
+                                &#10060;
+                            </div>
+                        </div>
+                        <div className='guide-content'>
+                            <div>
+                                <div>1. If you're unsure about your camera's intrinsic and extrinsic parameters, feel free to skip for now.</div>
+                                <div>You can always fine-tune these settings in your next attempt.</div>
+                            </div>
+                            <hr />
+                            <div>2. Fine-tuning your settings</div>
+                            <div>
+                                <div><strong>- What is object depth? -</strong></div>
+                                <div>
+                                    <img id="depth_showcase" src="/3dreconstruction/image/depth_showcase.png" title="Object depth showcase" />
+                                    <div>Object depth refers to the distance between the camera and the object in the scene.</div>
+                                    <div>Depth Min = Depth Max - Object depth</div>
+                                    <div>A well configured depth min and max can effectively address the coarseness of the result point cloud.</div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div>
+                                <div><strong>- What is focal length and how do i find it? -</strong></div>
+                                <div>The focal length of a camera lens refers to the distance between the lens and the image sensor.</div>
+                                <div>It's usually stated in millimeters (mm). You need to multiply the value by 10 before use.</div>
+                                <div>Example:</div>
+                                <div>Samsung Galaxy Note 10+ Default camera focal length = 52mm</div>
+                                <div>fx = fy = 520</div>
+                                <div>
+                                    <img id="fl_showcase" src="/3dreconstruction/image/focal_length_showcase.jpg" title="Focal length showcase" />
+                                </div>
+                                <div>The longer the focal length, the narrower the angle of view and the higher the magnification.
+                                </div>
+                            </div>
+                            <hr />
+                            <div>
+                                <div><strong>- What is Image center? -</strong></div>
+                                <div>The image center, also known as the principal point, is the point in the image where the principal ray (the ray from the scene point through the optical center of the lens) intersects the image plane.</div>
+                                <div>
+                                    <div>Example:</div>
+                                    <img id="cp_showcase" src="/3dreconstruction/image/principle_showcase.png" title="Principle point showcase" />
+                                    <div>Image width = 640,  height = 480</div>
+                                    <div>cx = 324, cy = 241</div>
+                                </div>
+                                <div>By default, the cx and cy will be half the image width and height.</div>
+                                <div>If you want to adjust the center point of your object in the images, you may configure here.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {openImgGuide && (
+                <div className='guide-wrapper' onClick={() => setOpenImgGuide(false)}>
+                    <div className='guide-container' onClick={(e) => e.stopPropagation()}>
+                        <div className='guide-header'>
+                            <span>Uploading Guideline</span>
+                            <div
+                                className='guide-close pointer'
+                                onClick={() => setOpenImgGuide(false)}
+                            >
+                                &#10060;
+                            </div>
+                        </div>
+                        <div className='guide-content'>
+                            <div>1. Upload at least 8 images of your object from various views.</div>
+                            <div>
+                                <div>Example views:</div>
+                                <div>                                    
+                                    <img src="/3dreconstruction/sample/switch/rgb/b1.png" title="front"/>
+                                    <img src="/3dreconstruction/sample/switch/rgb/b3.png" title="front sideways"/>
+                                    <img src="/3dreconstruction/sample/switch/rgb/b5.png" title="left"/>
+                                    <img src="/3dreconstruction/sample/switch/rgb/b6.png" title="left sideways"/>
+                                    <img src="/3dreconstruction/sample/switch/rgb/b9.png" title="back"/>
+                                    <img src="/3dreconstruction/sample/switch/rgb/b12.png" title="back sideways"/>
+                                    <img src="/3dreconstruction/sample/switch/rgb/b14.png" title="right"/>
+                                    <img src="/3dreconstruction/sample/switch/rgb/b15.png" title="right sideways"/>
+                                </div>                                
+                            </div>
+                            <hr />
+                            <div>2. Make sure the background of images are clean and well-lit.</div>
+                            <hr />
+                            <div>3. Avoid using images with watermarks or logos.</div>
+                            <hr />
+                            <div>4. Use images with a resolution of at most 640x480 pixels.</div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     )
 };
