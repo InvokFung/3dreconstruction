@@ -20,12 +20,12 @@ const SamplePage = () => {
     const navigateTo = useNavigate();
 
     const samples = [
-        {
-            name: "box",
-            prefix: "m",
-            count: 17,
-            suffix: ".png"
-        },
+        // {
+        //     name: "box",
+        //     prefix: "m",
+        //     count: 17,
+        //     suffix: ".png"
+        // },
         {
             name: "switch",
             prefix: "b",
