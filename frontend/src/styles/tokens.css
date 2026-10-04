@@ -1,0 +1,102 @@
+/*
+ * WebRecon design tokens.
+ * Identity: survey/photogrammetry field kit. Warm paper and graphite neutrals, a signal-orange
+ * accent (calibration targets), a cyan "point cloud" secondary, mono labels for measurements.
+ */
+:root {
+  color-scheme: light dark;
+
+  --font-sans: 'Archivo Variable', 'Archivo', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  /* neutrals */
+  --bg: #f4f2ed;
+  --bg-grid: rgba(22, 21, 15, 0.045);
+  --surface: #fbfaf7;
+  --surface-2: #efece5;
+  --surface-3: #e6e2d8;
+  --ink: #16150f;
+  --ink-2: #45433b;
+  --muted: #706d63;
+  --line: #dcd8ce;
+  --line-strong: #c3beb1;
+
+  /* signal */
+  --accent: #f0480f;
+  --accent-hover: #d93d07;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(240, 72, 15, 0.1);
+  --accent-text: #c23a07;
+  --cyan: #0a7f8f;
+  --cyan-soft: rgba(10, 127, 143, 0.12);
+
+  /* status */
+  --ok: #23804a;
+  --ok-soft: rgba(35, 128, 74, 0.12);
+  --warn: #a86c00;
+  --warn-soft: rgba(201, 138, 0, 0.14);
+  --danger: #c4281f;
+  --danger-soft: rgba(196, 40, 31, 0.1);
+  --info: #2c5fc9;
+  --info-soft: rgba(44, 95, 201, 0.1);
+
+  --shadow-1: 0 1px 0 rgba(22, 21, 15, 0.04), 0 1px 3px rgba(22, 21, 15, 0.06);
+  --shadow-2: 0 2px 4px rgba(22, 21, 15, 0.04), 0 12px 32px -8px rgba(22, 21, 15, 0.16);
+  --shadow-3: 0 24px 64px -12px rgba(22, 21, 15, 0.3);
+  --focus: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+
+  --radius-s: 4px;
+  --radius: 8px;
+  --radius-l: 14px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+
+  --container: 1200px;
+  --header-h: 60px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --viewer-bg: radial-gradient(120% 90% at 50% 15%, #ffffff 0%, #ebe7de 60%, #ddd8cc 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e0f10;
+    --bg-grid: rgba(241, 239, 233, 0.035);
+    --surface: #161719;
+    --surface-2: #1d1e21;
+    --surface-3: #26272b;
+    --ink: #f1efe9;
+    --ink-2: #c9c6bd;
+    --muted: #8f8c83;
+    --line: #2a2b2f;
+    --line-strong: #3a3b40;
+
+    --accent: #ff5f2e;
+    --accent-hover: #ff7a50;
+    --accent-ink: #160a05;
+    --accent-soft: rgba(255, 95, 46, 0.14);
+    --accent-text: #ff8a63;
+    --cyan: #41c8d8;
+    --cyan-soft: rgba(65, 200, 216, 0.14);
+
+    --ok: #4cc27a;
+    --ok-soft: rgba(76, 194, 122, 0.14);
+    --warn: #e7b23a;
+    --warn-soft: rgba(231, 178, 58, 0.14);
+    --danger: #ff6b60;
+    --danger-soft: rgba(255, 107, 96, 0.13);
+    --info: #79a4ff;
+    --info-soft: rgba(121, 164, 255, 0.13);
+
+    --shadow-1: 0 1px 0 rgba(0, 0, 0, 0.3);
+    --shadow-2: 0 2px 4px rgba(0, 0, 0, 0.3), 0 12px 32px -8px rgba(0, 0, 0, 0.6);
+    --shadow-3: 0 24px 64px -12px rgba(0, 0, 0, 0.8);
+    --viewer-bg: radial-gradient(120% 90% at 50% 15%, #2a2b2f 0%, #18191b 60%, #0f1011 100%);
+  }
+}

@@ -1,42 +1,18 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />    
-    <title>WebRecon - A Simplified Reconstruction Tool</title>
-    <script>
-        window.onload = function () {
-            var titleText = document.title;
-            var counter = 0;
-            var intervalId = setInterval(scrollTitle, 300);
-
-            var titleTextWords = titleText.split(' ');
-
-            function scrollTitle() {
-                counter++;
-                document.title = titleText.substring(counter);
-                var currentTitleWords = document.title.split(' ');                
-                if (counter == 14) {
-                    clearInterval(intervalId);
-                    setTimeout(() => {
-                        document.title = titleText; // reset the title
-                        setTimeout(function () {
-                            counter = 0;
-                            document.title = titleText; // reset the title
-                            intervalId = setInterval(scrollTitle, 300);
-                        }, 2000); // wait for 3 seconds before start scrolling again
-                    }, 3000); // wait for 3 seconds before reset the title
-                }
-            }
-        };
-    </script>
-</head>
-
-<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="WebRecon turns a walk-around of photos into a clean, textured 3D model you can download as GLB, OBJ, PLY or USDZ." />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f4f2ed" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f1011" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <title>WebRecon · Photos to 3D models</title>
+  </head>
+  <body>
     <div id="root"></div>
+    <noscript>WebRecon needs JavaScript to run.</noscript>
     <script type="module" src="/src/main.jsx"></script>
-</body>
-
+  </body>
 </html>

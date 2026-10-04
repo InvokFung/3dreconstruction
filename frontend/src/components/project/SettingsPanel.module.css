@@ -1,0 +1,65 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  min-width: 0;
+}
+.fieldset legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: 8px;
+  padding: 0;
+}
+.device {
+  height: 20px;
+  font-size: 0.62rem;
+}
+.engines {
+  display: grid;
+  gap: var(--space-2);
+}
+.quality {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+.quality :global(.choice__body) {
+  padding: var(--space-3);
+}
+.time {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  color: var(--ink-2);
+}
+.time svg {
+  width: 12px;
+  height: 12px;
+}
+.modeHint {
+  margin-top: -8px;
+}
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
+}

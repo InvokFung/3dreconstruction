@@ -1,0 +1,238 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.panel :global(.panel__head) {
+  margin-bottom: 0;
+  align-items: center;
+}
+
+/* ---------- connection ---------- */
+.conn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.connDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+.conn_open .connDot {
+  background: var(--ok);
+  box-shadow: 0 0 0 3px var(--ok-soft);
+  animation: live 2s ease-in-out infinite;
+}
+.conn_reconnecting .connDot,
+.conn_connecting .connDot {
+  background: var(--warn);
+  animation: live 0.8s ease-in-out infinite;
+}
+@keyframes live {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ---------- stepper ---------- */
+.stepper {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+.stepper li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  color: var(--muted);
+}
+.stepper li::before {
+  /* connector line to the previous step */
+  content: '';
+  position: absolute;
+  top: 13px;
+  right: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--line);
+  z-index: 0;
+}
+.stepper li:first-child::before {
+  display: none;
+}
+.stepper li.done::before,
+.stepper li.active::before,
+.stepper li.failed::before {
+  background: var(--ink);
+}
+.dot {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-strong);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+.dot svg {
+  width: 15px;
+  height: 15px;
+}
+.stepLabel {
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.done {
+  color: var(--ink);
+}
+.done .dot {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--bg);
+}
+.active {
+  color: var(--accent-text);
+}
+.active .dot {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+  animation: ring 1.6s ease-out infinite;
+}
+@keyframes ring {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 0 10px transparent;
+  }
+}
+.failed {
+  color: var(--danger);
+}
+.failed .dot {
+  border-color: var(--danger);
+  background: var(--danger);
+  color: #fff;
+}
+@media (max-width: 760px) {
+  /* compact: dots only; the current stage is named right below */
+  .stepLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .dot {
+    width: 24px;
+    height: 24px;
+    font-size: 0.66rem;
+  }
+  .stepper li::before {
+    top: 11px;
+  }
+}
+
+/* ---------- progress ---------- */
+.progressBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.progressHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.stageNow {
+  font-weight: 650;
+  font-size: 1.05rem;
+}
+.pct {
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.progressMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+}
+.message {
+  color: var(--ink-2);
+}
+
+/* ---------- log ---------- */
+.logBox > summary {
+  font-size: 0.9rem;
+  padding: 4px 0;
+}
+.logBox > summary svg {
+  width: 16px;
+  height: 16px;
+}
+.log {
+  margin-top: var(--space-3);
+  max-height: 280px;
+  overflow: auto;
+  padding: var(--space-3);
+  border-radius: var(--radius);
+  background: #111214;
+  color: #d9d6cd;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+.logEmpty {
+  color: #8f8c83;
+}
+.logLine {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 10px;
+}
+.logTs {
+  color: #6f6c64;
+}
+.logLvl {
+  width: 4ch;
+  color: #41c8d8;
+  text-transform: uppercase;
+}
+.logMsg {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.lvl_warning .logLvl,
+.lvl_warn .logLvl {
+  color: #e7b23a;
+}
+.lvl_error .logLvl,
+.lvl_error .logMsg {
+  color: #ff7b70;
+}
+.lvl_debug {
+  opacity: 0.6;
+}

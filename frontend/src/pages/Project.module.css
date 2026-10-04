@@ -1,0 +1,81 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding-block: var(--space-5) var(--space-7);
+}
+.crumbs {
+  display: flex;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  min-width: 0;
+}
+.crumbs a {
+  color: var(--ink-2);
+}
+.crumbs [aria-current] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  scroll-margin-top: calc(var(--header-h) + 16px);
+}
+.headMain {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.title {
+  font-size: clamp(1.7rem, 3.6vw, 2.5rem);
+  overflow-wrap: anywhere;
+}
+.titleForm {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  flex-wrap: wrap;
+}
+.titleInput {
+  max-width: 420px;
+  font-size: 1.3rem;
+  font-weight: 650;
+}
+.meta {
+  --gap: 12px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: var(--space-5);
+  align-items: start;
+}
+.settings {
+  position: sticky;
+  top: calc(var(--header-h) + 16px);
+}
+.scrollTarget {
+  scroll-margin-top: calc(var(--header-h) + 16px);
+}
+@media (max-width: 1060px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .settings {
+    position: static;
+  }
+}

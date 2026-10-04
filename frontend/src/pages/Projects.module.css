@@ -1,0 +1,116 @@
+.page {
+  padding-block: var(--space-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.head {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.title {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-5);
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition:
+    box-shadow 0.2s var(--ease),
+    transform 0.2s var(--ease),
+    border-color 0.2s var(--ease);
+}
+.card:hover {
+  box-shadow: var(--shadow-2);
+  border-color: var(--line-strong);
+}
+.cardLink {
+  display: block;
+  border-radius: var(--radius-l) var(--radius-l) 0 0;
+}
+.thumb {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s var(--ease);
+}
+.card:hover .thumb img {
+  transform: scale(1.03);
+}
+.thumbEmpty {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--muted);
+  background-image: radial-gradient(circle at 1px 1px, var(--line-strong) 1px, transparent 0);
+  background-size: 12px 12px;
+}
+.thumbEmpty svg {
+  width: 34px;
+  height: 34px;
+  padding: 6px;
+  box-sizing: content-box;
+  border-radius: 50%;
+  background: var(--surface);
+}
+.badgePos {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+}
+.badgePos :global(.badge) {
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow-1);
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-right: -8px;
+}
+.name {
+  flex: 1;
+  min-width: 0;
+  font-size: 1.05rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.name a {
+  text-decoration: none;
+}
+.name a:hover {
+  text-decoration: underline;
+}
+.desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.meta {
+  display: flex;
+  gap: var(--space-2);
+  font-size: 0.75rem;
+  color: var(--muted);
+}

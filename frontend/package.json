@@ -1,41 +1,38 @@
 {
-  "homepage": "https://invokfung.github.io/3dreconstruction",
-  "name": "3dreconstruction",
+  "name": "webrecon-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
+  "homepage": "https://invokfung.github.io/3dreconstruction",
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
-    "dev": "vite --host",
+    "dev": "vite",
+    "dev:mock": "vite --mode mock",
     "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "build:pages": "vite build --mode pages",
+    "preview": "vite preview",
+    "lint": "eslint . --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "deploy": "npm run build:pages && gh-pages -d dist"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.525.0",
-    "@originjs/vite-plugin-commonjs": "^1.0.3",
-    "bootstrap": "^5.3.3",
-    "dat.gui": "^0.7.9",
-    "npyjs": "^0.6.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.3",
-    "three": "^0.162.0",
-    "url": "^0.11.3"
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.18.4",
+    "three": "^0.186.1"
   },
   "devDependencies": {
-    "@types/react": "^18.2.55",
-    "@types/react-dom": "^18.2.19",
-    "@vitejs/plugin-react-swc": "^3.5.0",
-    "eslint": "^8.56.0",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.5",
-    "gh-pages": "^6.1.1",
-    "vite": "^5.1.0"
-  },
-  "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.6.1"
+    "@eslint/js": "^10.0.1",
+    "@vitejs/plugin-react": "^6.1.1",
+    "eslint": "^10.12.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "gh-pages": "^6.3.0",
+    "globals": "^17.13.0",
+    "jsdom": "^29.1.1",
+    "vite": "^8.3.2",
+    "vitest": "^5.0.3"
   }
 }

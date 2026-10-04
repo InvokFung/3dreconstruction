@@ -1,0 +1,52 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  border-color: color-mix(in srgb, var(--danger) 40%, var(--line));
+  box-shadow: inset 4px 0 0 var(--danger), var(--shadow-1);
+}
+.canceled {
+  border-color: var(--line);
+  box-shadow: inset 4px 0 0 var(--muted), var(--shadow-1);
+}
+.head {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+.icon {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  color: var(--danger);
+}
+.canceled .icon {
+  color: var(--muted);
+}
+.title {
+  font-size: 1.25rem;
+}
+.at {
+  color: var(--muted);
+  font-weight: 500;
+}
+.message {
+  font-size: 1rem;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.hints {
+  padding: var(--space-4);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+.hints ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding-left: 1.1em;
+}
+.hints li::marker {
+  color: var(--accent);
+}
