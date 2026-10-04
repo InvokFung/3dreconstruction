@@ -53,7 +53,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 PIP_DISABLE_
     U2NET_HOME=/models/u2net
 RUN set -eux; \
     apt-get update; \
-    apt-get install -y --no-install-recommends ca-certificates ffmpeg libgl1 libglib2.0-0 libgomp1 ${EXTRA_APT_PACKAGES}; \
+    apt-get install -y --no-install-recommends ca-certificates ffmpeg libgl1 libegl1 libglib2.0-0 libgomp1 ${EXTRA_APT_PACKAGES}; \
     if ! python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)' 2>/dev/null; then \
         apt-get install -y --no-install-recommends software-properties-common gpg-agent; \
         add-apt-repository -y ppa:deadsnakes/ppa; apt-get update; \
@@ -65,10 +65,12 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*
 COPY backend/requirements-api.txt /tmp/requirements-api.txt
 COPY backend/recon/requirements.txt /tmp/requirements-recon.txt
+COPY backend/recon/requirements-nodeps.txt /tmp/requirements-recon-nodeps.txt
 RUN --mount=type=secret,id=ca_bundle,required=false \
     if [ -s /run/secrets/ca_bundle ]; then export PIP_CERT=/run/secrets/ca_bundle; fi; \
     pip install --upgrade pip \
     && pip install ${TORCH_INDEX_URL:+--extra-index-url ${TORCH_INDEX_URL}} -r /tmp/requirements-recon.txt \
+    && pip install --no-deps -r /tmp/requirements-recon-nodeps.txt \
     && pip install -r /tmp/requirements-api.txt
 RUN (getent group 1000 || groupadd --gid 1000 app) \
     && (getent passwd 1000 || useradd --uid 1000 --gid 1000 --home /app app) \

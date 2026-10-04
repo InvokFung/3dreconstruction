@@ -1,0 +1,19 @@
+# GPU extras (NVIDIA, CUDA 12.x). NOT tested in this repository (no GPU in CI/dev).
+# Use instead of the CPU torch wheels from requirements.txt:
+#   pip install -r requirements-gpu.txt -r requirements.txt   (drop the +cpu pins / extra-index)
+--extra-index-url https://download.pytorch.org/whl/cu128
+torch==2.14.1
+torchvision==0.29.1
+onnxruntime-gpu==1.30.0       # only if you enable the rembg fallback
+
+# Dense MVS on GPU: build pycolmap/COLMAP with CUDA from source (the PyPI wheel is CPU-only):
+#   https://colmap.github.io/install.html  (cmake -DCUDA_ENABLED=ON, then `pip install ./pycolmap`)
+# The pipeline detects `pycolmap.has_cuda` and switches to PatchMatch stereo automatically.
+
+# Generative engine (image -> 3D). Install ONE of:
+# 1) TRELLIS.2 (MIT, recommended, 24 GB+ VRAM):
+#      git clone --recursive https://github.com/microsoft/TRELLIS.2 && cd TRELLIS.2 && . ./setup.sh --basic --flash-attn --nvdiffrast --cumesh --o-voxel --flexgemm
+#    (provides the `trellis2` and `o_voxel` packages; weights: microsoft/TRELLIS.2-4B)
+# 2) Hunyuan3D-2 (Tencent Hunyuan Community License: not licensed for use in the EU, UK or South Korea):
+#      pip install git+https://github.com/Tencent-Hunyuan/Hunyuan3D-2
+#      (+ build hy3dgen/texgen/custom_rasterizer and differentiable_renderer per upstream README)

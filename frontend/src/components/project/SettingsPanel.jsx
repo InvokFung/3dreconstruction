@@ -16,7 +16,14 @@ const QUALITY = [
   { value: 'high', label: 'High', perPhoto: 35, base: 300, text: 'Max detail' },
 ];
 
-const FACES = [25000, 50000, 100000, 250000, 500000];
+const FACES = [25000, 50000, 100000, 300000, 500000];
+
+/** Pipeline preset defaults per quality; picking a quality resets these (they can still be overridden). */
+const PRESETS = {
+  draft: { texture_size: 1024, target_faces: 50000 },
+  standard: { texture_size: 2048, target_faces: 100000 },
+  high: { texture_size: 4096, target_faces: 300000 },
+};
 const TEXTURES = [1024, 2048, 4096];
 
 /** Rough wall-clock estimate on a mid-range machine; shown as a range, never as a promise. */
@@ -126,7 +133,7 @@ export default function SettingsPanel({ engines, enginesError, imageCount, block
         <div className={styles.quality}>
           {QUALITY.map((q) => (
             <label key={q.value} className="choice">
-              <input type="radio" name={`${id}-quality`} value={q.value} checked={opts.quality === q.value} onChange={() => set('quality')(q.value)} />
+              <input type="radio" name={`${id}-quality`} value={q.value} checked={opts.quality === q.value} onChange={() => setOpts((o) => ({ ...o, quality: q.value, ...PRESETS[q.value] }))} />
               <span className="choice__body">
                 <span className="choice__title">{q.label}</span>
                 <span className="choice__meta">{q.text}</span>

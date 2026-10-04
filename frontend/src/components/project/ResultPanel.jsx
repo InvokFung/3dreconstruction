@@ -42,15 +42,28 @@ function metricValue(key, value) {
   return String(value);
 }
 
+/** Keys folded into combined rows ("Aligned photos", "Size") rather than shown on their own. */
+const FOLDED = new Set(['registered_images', 'input_images', 'images_in', 'images_used', 'bbox_size', 'bbox_unit', 'scale_source']);
+
+function formatSize(size, unit, source) {
+  const [x, y, z] = size;
+  const cm = unit === 'm';
+  const fmt = (v) => (cm ? `${Math.round(v * 100)}` : v.toFixed(2));
+  return `${source === 'metric_estimate' ? '≈ ' : ''}${fmt(x)} × ${fmt(y)} × ${fmt(z)}${cm ? ' cm' : ''}`;
+}
+
 export function Metrics({ job }) {
   const m = job.metrics ?? {};
   const entries = [];
-  if (m.registered_images != null && m.input_images != null) {
-    entries.push(['Aligned photos', `${formatNumber(m.registered_images)} / ${formatNumber(m.input_images)}`]);
+  const total = m.input_images ?? m.images_in;
+  if (m.registered_images != null && total != null) {
+    entries.push(['Aligned photos', `${formatNumber(m.registered_images)} / ${formatNumber(total)}`]);
+  }
+  if (Array.isArray(m.bbox_size) && m.bbox_size.length === 3) {
+    entries.push(['Size (W × H × D)', formatSize(m.bbox_size, m.bbox_unit, m.scale_source)]);
   }
   for (const [k, v] of Object.entries(m)) {
-    if (entries.length && (k === 'registered_images' || k === 'input_images')) continue;
-    if (Array.isArray(v)) continue;
+    if (FOLDED.has(k) || Array.isArray(v) || (v && typeof v === 'object')) continue;
     entries.push([METRIC_LABELS[k] ?? humanize(k), metricValue(k, v)]);
   }
   const dur = jobDuration(job);

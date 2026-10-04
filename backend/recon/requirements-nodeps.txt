@@ -1,0 +1,6 @@
+# Install with:  pip install --no-deps -r requirements-nodeps.txt
+# depth-anything-3 declares numpy<2, xformers, gradio, uvicorn ... that the inference path does
+# not need (and that would downgrade numpy / pull CUDA wheels). Its real runtime deps are listed
+# in requirements.txt. evo is only imported for trajectory alignment helpers.
+depth-anything-3==0.1.1
+evo==1.37.1

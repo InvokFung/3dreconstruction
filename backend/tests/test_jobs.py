@@ -58,8 +58,8 @@ def test_submit_validation_and_one_active(api, env):
     assert job["options"] == {
         "quality": "draft",
         "mode": "object",
-        "texture_size": 2048,
-        "target_faces": 100000,
+        "texture_size": None,
+        "target_faces": None,
         "formats": ["glb"],
         "device": "auto",
     }

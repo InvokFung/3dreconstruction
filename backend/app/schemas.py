@@ -80,8 +80,9 @@ class JobOptions(BaseModel):
 
     quality: Literal["draft", "standard", "high"] = "standard"
     mode: Literal["object", "scene"] = "object"
-    texture_size: Literal[1024, 2048, 4096] = 2048
-    target_faces: int = Field(default=100_000, ge=1_000, le=5_000_000)
+    # None = use the quality preset's value (draft 1024/50k, standard 2048/100k, high 4096/300k).
+    texture_size: Literal[1024, 2048, 4096] | None = None
+    target_faces: int | None = Field(default=None, ge=1_000, le=5_000_000)
     formats: list[Literal["glb", "obj", "ply", "usdz"]] = Field(default_factory=lambda: list(FORMATS), min_length=1)
     device: Literal["auto", "cpu", "cuda"] = "auto"
 

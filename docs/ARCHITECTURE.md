@@ -27,8 +27,8 @@ python -m recon.cli --job-dir <DIR> --config <DIR>/config.json
     "engine": "photogrammetry",          // "photogrammetry" | "generative"
     "quality": "standard",               // "draft" | "standard" | "high"
     "mode": "object",                    // "object" (isolate subject, remove background) | "scene"
-    "texture_size": 2048,                // 1024 | 2048 | 4096
-    "target_faces": 100000,              // decimation target for the final mesh
+    "texture_size": null,                // 1024 | 2048 | 4096; null/missing = quality preset (draft 1024, standard 2048, high 4096)
+    "target_faces": null,                // decimation target; null/missing = preset (50k / 100k / 300k)
     "formats": ["glb", "obj", "ply", "usdz"],
     "device": "auto"                     // "auto" | "cpu" | "cuda"
   }
