@@ -1,0 +1,47 @@
+[project]
+name = "reconstruction-api"
+version = "1.0.0"
+description = "FastAPI backend + job worker for the photos-to-3D web app"
+requires-python = ">=3.11"
+# Runtime deps of the API/worker process (NOT the pipeline; see recon/requirements.txt).
+# Kept in sync with requirements-api.txt, which Docker/CI install.
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "sqlalchemy>=2.0.30",
+    "alembic>=1.13",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "email-validator>=2.1",
+    "argon2-cffi>=23.1",
+    "pyjwt>=2.8",
+    "python-multipart>=0.0.9",
+    "pillow>=10.3",
+    "pillow-heif>=0.16",
+    "psycopg[binary]>=3.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "httpx>=0.27", "ruff>=0.5"]
+
+[tool.setuptools]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-p no:cacheprovider"
+filterwarnings = ["ignore::DeprecationWarning", "ignore:Using `httpx`:Warning"]
+faulthandler_timeout = 120
+
+[tool.ruff]
+line-length = 135
+target-version = "py311"
+extend-exclude = ["recon"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["B008"]  # FastAPI Depends() in defaults
+
+[tool.ruff.lint.isort]
+known-third-party = ["alembic"]
+known-first-party = ["app"]

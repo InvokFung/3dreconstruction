@@ -1,0 +1,43 @@
+name: Deploy frontend to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build frontend and publish gh-pages
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - name: Build (base /3dreconstruction/)
+        run: npm run build:pages
+        env:
+          # Optional: point the static site at a deployed API (repo variable). Empty = mock/same-origin per .env.pages.
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+          VITE_BASE: /3dreconstruction/
+      - name: SPA fallback for client-side routes
+        run: cp dist/index.html dist/404.html
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: frontend/dist
+          publish_branch: gh-pages
+          force_orphan: true

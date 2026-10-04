@@ -1,0 +1,17 @@
+# Used by BuildKit for backend/Dockerfile (context = repo root).
+**/.git
+**/node_modules
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.ruff_cache
+**/.venv
+**/venv
+**/.env
+backend/data
+backend/tests
+backend/recon/tests
+data
+frontend
+docs
+deploy

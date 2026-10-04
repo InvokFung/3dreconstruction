@@ -22,3 +22,27 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python / backend
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+*.egg-info/
+backend/data/
+/data/
+*.db
+*.db-wal
+*.db-shm
+
+# Env files (keep the examples)
+.env
+.env.*
+!.env.example
+!frontend/.env.example
+!frontend/.env.mock
+!frontend/.env.pages
+deploy/.env

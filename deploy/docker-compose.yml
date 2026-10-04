@@ -1,0 +1,97 @@
+# Production-style stack: postgres + api + worker + web (nginx serving the frontend, proxying /api).
+#   cd deploy && cp ../.env.example .env   # then set SECRET_KEY, POSTGRES_PASSWORD, PUBLIC_URL
+#   docker compose up -d --build
+# GPU worker: docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d --build
+name: webrecon
+
+x-backend-env: &backend-env
+  ENV: production
+  DATABASE_URL: postgresql://${POSTGRES_USER:-recon}:${POSTGRES_PASSWORD:-recon}@postgres:5432/${POSTGRES_DB:-recon}
+  DATA_DIR: /data
+  SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY (>=32 random chars) in deploy/.env}
+  ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-10080}
+  CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
+  MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-50}
+  MAX_FILES_PER_PROJECT: ${MAX_FILES_PER_PROJECT:-200}
+  WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-1}
+  JOB_TIMEOUT_SECONDS: ${JOB_TIMEOUT_SECONDS:-7200}
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  LOG_FORMAT: json
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-recon}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-recon}
+      POSTGRES_DB: ${POSTGRES_DB:-recon}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+      target: api
+    image: webrecon-api:latest
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      AUTO_MIGRATE: "true"   # the api runs `alembic upgrade head` at startup
+    volumes:
+      - data:/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+    expose:
+      - "8000"
+
+  worker:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+      target: worker
+      args:
+        WORKER_BASE_IMAGE: ${WORKER_BASE_IMAGE:-python:3.11-slim}
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cpu}
+    image: webrecon-worker:latest
+    restart: unless-stopped
+    environment:
+      <<: *backend-env
+      AUTO_MIGRATE: "false"  # migrations are owned by the api service
+      CANCEL_GRACE_SECONDS: ${CANCEL_GRACE_SECONDS:-10}
+    volumes:
+      - data:/data
+      - models:/models
+    depends_on:
+      api:
+        condition: service_healthy
+    # Give running pipelines time to stop; their jobs are re-queued on shutdown.
+    stop_grace_period: 60s
+    shm_size: 2gb
+
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/web.Dockerfile
+      args:
+        VITE_API_URL: ""
+        VITE_BASE: /
+    image: webrecon-web:latest
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  data:
+  models:
