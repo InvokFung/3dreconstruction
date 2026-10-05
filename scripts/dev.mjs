@@ -4,7 +4,7 @@
 //   worker  runs reconstruction jobs
 //   web     http://localhost:5173   (Vite; proxies /api to the API)
 // and makes sure the demo account exists. Ctrl+C stops everything.
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { BACKEND, FRONTEND, NPM, IS_WIN, hasVenv, venvPython } from './lib.mjs';
 
 export const DEMO = { email: 'demo@webrecon.dev', password: 'demo1234', name: 'Demo' };
@@ -44,7 +44,12 @@ function start(name, cmd, args, cwd) {
 let shuttingDown = false;
 function shutdown(code = 0) {
   shuttingDown = true;
-  for (const c of children) if (c.exitCode === null) c.kill(IS_WIN ? undefined : 'SIGTERM');
+  for (const c of children) {
+    if (c.exitCode !== null) continue;
+    // On Windows, kill the whole tree (npm.cmd -> node vite, python -> pipeline).
+    if (IS_WIN) spawnSync('taskkill', ['/PID', String(c.pid), '/T', '/F'], { stdio: 'ignore' });
+    else c.kill('SIGTERM');
+  }
   setTimeout(() => process.exit(code), 1500).unref();
 }
 process.on('SIGINT', () => shutdown(0));

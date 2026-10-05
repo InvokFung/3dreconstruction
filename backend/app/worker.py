@@ -78,7 +78,27 @@ def _stderr_level(line: str) -> str:
     return {"WARN": "warning", "CRITICAL": "error", "FATAL": "error"}.get(m.group(1), m.group(1).lower())
 
 
+_IS_WINDOWS = os.name == "nt"
+# SIGKILL does not exist on Windows; there "kill" means TerminateProcess.
+_SIGKILL = getattr(signal, "SIGKILL", signal.SIGTERM)
+
+
 def _signal_group(proc: subprocess.Popen, sig: int) -> None:
+    if _IS_WINDOWS:
+        # No process groups/POSIX signals: terminate the whole child tree.
+        if sig == _SIGKILL or sig == signal.SIGTERM:
+            subprocess.run(
+                ["taskkill", "/PID", str(proc.pid), "/T", "/F"] if sig == _SIGKILL else ["taskkill", "/PID", str(proc.pid), "/T"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
+        try:
+            if sig == _SIGKILL:
+                proc.kill()
+        except OSError:
+            pass
+        return
     try:
         os.killpg(proc.pid, sig)
     except (ProcessLookupError, PermissionError):
@@ -163,7 +183,9 @@ class JobRunner:
                 stdin=subprocess.DEVNULL,
                 cwd=recon_cwd(self.s),
                 env=recon_env(self.s),
-                start_new_session=True,  # own process group so we can signal the whole tree
+                # Own process group so we can signal the whole tree (Windows: own console group).
+                start_new_session=not _IS_WINDOWS,
+                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP if _IS_WINDOWS else 0,
             )
         except OSError as e:
             jlog.write("error", f"Could not start the reconstruction pipeline: {e}")
@@ -287,7 +309,7 @@ class JobRunner:
                     kill_at = now + self.s.CANCEL_GRACE_SECONDS
             if kill_at is not None and now >= kill_at and proc.poll() is None:
                 jlog.write("warning", "Pipeline did not exit after SIGTERM; killing it")
-                _signal_group(proc, signal.SIGKILL)
+                _signal_group(proc, _SIGKILL)
                 kill_at = None
 
             heartbeat_due = now - last_write >= self.s.HEARTBEAT_SECONDS
@@ -306,7 +328,7 @@ class JobRunner:
                 break
 
         # Make sure nothing in the process group survives (e.g. orphaned helpers).
-        _signal_group(proc, signal.SIGKILL)
+        _signal_group(proc, _SIGKILL)
         t_out.join(timeout=2)
         t_err.join(timeout=2)
         while True:  # drain anything left

@@ -29,13 +29,30 @@ The contracts between the pieces (pipeline CLI, HTTP API, config) are in
 
 ## Quick start
 
-1. **Backend**: see [backend/README.md](backend/README.md) to run the API and the worker
-   (default `http://localhost:8000`).
-2. **Frontend**: see [frontend/README.md](frontend/README.md).
-   ```bash
-   cd frontend && npm install && npm run dev        # proxies /api to localhost:8000
-   ```
-   No backend handy? `npm run dev:mock` runs the whole UI against an in-browser mock API.
+You need **Node.js 20+** and **[uv](https://docs.astral.sh/uv/getting-started/installation/)**
+(uv also installs the right Python for you). Works on Windows, macOS and Linux.
+
+```bash
+npm run setup    # once: Python env (uv sync), backend/.env, frontend packages  (pnpm works too)
+npm run dev      # starts API :8000 + worker + web app :5173
+```
+
+Open http://localhost:5173 and sign in with the demo account **demo@webrecon.dev / demo1234**
+(or register your own). Click a sample → **Start reconstruction**. A draft run takes a few minutes on a
+CPU. The first run also downloads the AI models (~1–2 GB) into `~/.cache/recon`.
+
+Other commands:
+
+| Command | What it does |
+|---|---|
+| `npm run dev:mock` | UI only, with a fake in-browser API (no Python needed) |
+| `npm test` | backend + pipeline + frontend tests |
+| `cd backend && uv run uvicorn app.main:app --reload` | API only |
+| `cd backend && uv run python -m app.worker` | worker only |
+| `cd backend && uv run python -m recon.cli --job-dir DIR --config DIR/config.json` | pipeline on a folder of photos |
+
+Linux only: the pipeline needs `sudo apt-get install -y libgl1 libegl1 libgomp1`.
+Production deployment with Docker: see [backend/README.md](backend/README.md) and `deploy/`.
 
 ## Repository layout
 

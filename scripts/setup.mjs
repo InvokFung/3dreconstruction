@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // One-time local setup:  npm run setup  [-- --no-pipeline]
-//   1. creates backend/.venv and installs the API + reconstruction pipeline dependencies
+//   1. creates backend/.venv with the API + reconstruction pipeline dependencies
+//      (`uv sync` when uv is installed — recommended — otherwise venv + pip)
 //   2. writes backend/.env (with a fresh SECRET_KEY) if it doesn't exist
 //   3. installs the frontend's npm packages
 // --no-pipeline skips the heavy pipeline deps (PyTorch, COLMAP, Open3D, ...): the UI and API work,
@@ -28,30 +29,39 @@ function findPython() {
 }
 
 // 1. Python environment -------------------------------------------------------------------------
-if (!hasVenv()) {
-  const py = findPython();
-  if (!py) {
-    console.error('✖ Python 3.10–3.12 not found (3.11 recommended). Install it from https://www.python.org/downloads/ and re-run.');
-    process.exit(1);
-  }
-  console.log(`Using Python ${py.version} (${py.cmd} ${py.pre.join(' ')})`);
-  run(py.cmd, [...py.pre, '-m', 'venv', VENV]);
-}
-const pip = (...args) => run(venvPython(), ['-m', 'pip', ...args]);
-pip('install', '--upgrade', 'pip');
-pip('install', '-r', path.join(BACKEND, 'requirements-dev.txt'));
+const hasUv = spawnSync('uv', ['--version'], { stdio: 'ignore' }).status === 0;
 
-if (!noPipeline) {
-  let reqs = path.join(BACKEND, 'recon', 'requirements.txt');
-  if (process.platform !== 'linux') {
-    // The "+cpu" PyTorch builds only exist for Linux/Windows on the PyTorch index; on macOS the plain
-    // PyPI wheels are CPU (+ Apple MPS) builds. Strip the local version tag so pip can resolve them.
-    const tmp = path.join(mkdtempSync(path.join(tmpdir(), 'recon-')), 'requirements.txt');
-    writeFileSync(tmp, readFileSync(reqs, 'utf8').replace(/\+cpu\b/g, ''));
-    reqs = tmp;
+if (hasUv && !noPipeline) {
+  // Reads backend/pyproject.toml + uv.lock, creates backend/.venv, downloads Python if needed.
+  run('uv', ['sync'], { cwd: BACKEND });
+} else if (hasUv) {
+  run('uv', ['venv', '--allow-existing', '--python', '3.11'], { cwd: BACKEND });
+  run('uv', ['pip', 'install', '-r', 'requirements-dev.txt'], { cwd: BACKEND });
+} else {
+  console.log('Tip: install uv (https://docs.astral.sh/uv/) for faster, locked installs. Falling back to venv + pip.');
+  if (!hasVenv()) {
+    const py = findPython();
+    if (!py) {
+      console.error('✖ Python 3.10–3.12 not found (3.11 recommended). Install uv or Python 3.11 and re-run.');
+      process.exit(1);
+    }
+    console.log(`Using Python ${py.version} (${py.cmd} ${py.pre.join(' ')})`);
+    run(py.cmd, [...py.pre, '-m', 'venv', VENV]);
   }
-  pip('install', '-r', reqs);
-  pip('install', '--no-deps', '-r', path.join(BACKEND, 'recon', 'requirements-nodeps.txt'));
+  const pip = (...args) => run(venvPython(), ['-m', 'pip', ...args]);
+  pip('install', '--upgrade', 'pip');
+  pip('install', '-r', path.join(BACKEND, 'requirements-dev.txt'));
+  if (!noPipeline) {
+    let reqs = path.join(BACKEND, 'recon', 'requirements.txt');
+    if (process.platform !== 'linux') {
+      // "+cpu" PyTorch builds only exist for Linux/Windows; macOS PyPI wheels are already CPU/MPS.
+      const tmp = path.join(mkdtempSync(path.join(tmpdir(), 'recon-')), 'requirements.txt');
+      writeFileSync(tmp, readFileSync(reqs, 'utf8').replace(/\+cpu\b/g, ''));
+      reqs = tmp;
+    }
+    pip('install', '-r', reqs);
+    pip('install', '--no-deps', '-r', path.join(BACKEND, 'recon', 'requirements-nodeps.txt'));
+  }
 }
 
 // 2. backend/.env -------------------------------------------------------------------------------
