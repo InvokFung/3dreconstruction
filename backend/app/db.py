@@ -3,7 +3,11 @@
 from __future__ import annotations
 
 import logging
+import os
+import sqlite3
+import time
 from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 
 from sqlalchemy import create_engine, event, text
@@ -48,9 +52,20 @@ def make_engine(database_url: str) -> Engine:
         @event.listens_for(engine, "connect")
         def _sqlite_pragmas(dbapi_conn, _rec):  # pragma: no cover - trivial
             cur = dbapi_conn.cursor()
-            cur.execute("PRAGMA journal_mode=WAL")
-            cur.execute("PRAGMA foreign_keys=ON")
             cur.execute("PRAGMA busy_timeout=30000")
+            cur.execute("PRAGMA foreign_keys=ON")
+            # WAL is persistent in the db file, so only the first connection ever needs to switch it.
+            # Switching needs an exclusive lock and can fail with "database is locked" when the API
+            # and the worker start at the same moment (seen on Windows), so retry briefly.
+            if cur.execute("PRAGMA journal_mode").fetchone()[0].lower() != "wal":
+                for attempt in range(50):
+                    try:
+                        cur.execute("PRAGMA journal_mode=WAL")
+                        break
+                    except sqlite3.OperationalError:
+                        if attempt == 49:
+                            raise
+                        time.sleep(0.2)
             cur.close()
 
         return engine
@@ -83,6 +98,40 @@ def get_db() -> Iterator[Session]:
         db.close()
 
 
+@contextmanager
+def _sqlite_migration_lock(engine: Engine) -> Iterator[None]:
+    """Serialise migrations across processes for a file-based SQLite db (API + worker start together).
+
+    SQLite DDL isn't transactional under the driver, so without this two processes both try to
+    CREATE the tables. Postgres uses an advisory lock instead (see run_migrations).
+    """
+    db = engine.url.database if engine.dialect.name == "sqlite" else None
+    if not db or db == ":memory:":
+        yield
+        return
+    lock = Path(db).expanduser().resolve().with_suffix(".migrate.lock")
+    deadline = time.monotonic() + 120
+    while True:
+        try:
+            fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            break
+        except FileExistsError:
+            try:  # stale lock from a crashed process
+                if time.time() - lock.stat().st_mtime > 120:
+                    lock.unlink(missing_ok=True)
+                    continue
+            except FileNotFoundError:
+                continue
+            if time.monotonic() > deadline:
+                raise TimeoutError(f"Timed out waiting for migration lock {lock}") from None
+            time.sleep(0.1)
+    try:
+        yield
+    finally:
+        os.close(fd)
+        lock.unlink(missing_ok=True)
+
+
 def run_migrations(settings: Settings) -> None:
     """Run `alembic upgrade head` programmatically (serialised with an advisory lock on Postgres)."""
     from alembic import command
@@ -92,7 +141,7 @@ def run_migrations(settings: Settings) -> None:
     cfg.set_main_option("script_location", str(BACKEND_DIR / "alembic"))
     cfg.set_main_option("sqlalchemy.url", normalize_url(settings.DATABASE_URL).replace("%", "%%"))
     engine = init_engine(settings)
-    with engine.begin() as conn:
+    with _sqlite_migration_lock(engine), engine.begin() as conn:
         if conn.dialect.name == "postgresql":
             conn.execute(text("SELECT pg_advisory_xact_lock(724411)"))
         cfg.attributes["connection"] = conn

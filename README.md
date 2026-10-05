@@ -47,7 +47,7 @@ Other commands:
 |---|---|
 | `npm run dev:mock` | UI only, with a fake in-browser API (no Python needed) |
 | `npm test` | backend + pipeline + frontend tests |
-| `cd backend && uv run uvicorn app.main:app --reload` | API only |
+| `cd backend && uv run uvicorn app.main:app --reload --reload-dir app` | API only |
 | `cd backend && uv run python -m app.worker` | worker only |
 | `cd backend && uv run python -m recon.cli --job-dir DIR --config DIR/config.json` | pipeline on a folder of photos |
 

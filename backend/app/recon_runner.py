@@ -68,7 +68,10 @@ def probe_capabilities(settings: Settings) -> dict:
         return _unavailable(f"Pipeline could not be started: {e.strerror or e}")
     if proc.returncode != 0:
         log.warning("capabilities probe failed", extra={"rc": proc.returncode, "stderr": proc.stderr[-2000:]})
-        return _unavailable("Reconstruction pipeline is not installed or failed to start")
+        return _unavailable(
+            "Reconstruction pipeline is not installed or failed to start (run `uv sync` in backend/; "
+            "check with `uv run python -m recon.cli --capabilities`)"
+        )
     for line in reversed(proc.stdout.strip().splitlines()):
         line = line.strip()
         if not line.startswith("{"):

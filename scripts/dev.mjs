@@ -56,7 +56,7 @@ process.on('SIGINT', () => shutdown(0));
 process.on('SIGTERM', () => shutdown(0));
 
 const py = venvPython();
-start('api', py, ['-m', 'uvicorn', 'app.main:app', '--reload', '--port', '8000'], BACKEND);
+start('api', py, ['-m', 'uvicorn', 'app.main:app', '--reload', '--reload-dir', 'app', '--port', '8000'], BACKEND);
 start('worker', py, ['-m', 'app.worker'], BACKEND);
 start('web', NPM, ['run', 'dev', '--', '--port', '5173', '--strictPort'], FRONTEND);
 

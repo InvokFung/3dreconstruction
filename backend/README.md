@@ -20,30 +20,29 @@ tests/              pytest suite; tests/fake_recon/fake_cli.py is a contract-con
 
 ## Run locally
 
-Python 3.11+. Two venvs keep the API light: one for the API/worker, one for the pipeline.
+Easiest: from the repo root, `npm run setup` then `npm run dev` (see the root README).
+By hand, with [uv](https://docs.astral.sh/uv/) (it installs Python 3.11/3.12 for you):
 
 ```bash
-# API + worker venv
-python3.11 -m venv ~/venvs/api
-~/venvs/api/bin/pip install -r backend/requirements-dev.txt
-
-# Pipeline venv (owned by backend/recon)
-python3.11 -m venv ~/venvs/recon
-~/venvs/recon/bin/pip install -r backend/recon/requirements.txt
-
-cp .env.example backend/.env        # then edit as needed
 cd backend
+uv sync                                   # API + worker + pipeline into backend/.venv (from uv.lock)
+cp ../.env.example .env                   # optional; then edit as needed
 
 # API on :8000 (runs `alembic upgrade head` at startup when AUTO_MIGRATE=true)
-~/venvs/api/bin/uvicorn app.main:app --reload --port 8000
+uv run uvicorn app.main:app --reload --reload-dir app --port 8000
 
 # Worker, in another shell
-RECON_PYTHON=~/venvs/recon/bin/python ~/venvs/api/bin/python -m app.worker
+uv run python -m app.worker
 #   --once            process a single queued job and exit
 #   --concurrency N   override WORKER_CONCURRENCY
 ```
 
-A single venv also works: install both requirement files into it and leave `RECON_PYTHON` unset.
+Check that the pipeline is installed: `uv run python -m recon.cli --capabilities`.
+
+Without uv: create a venv and `pip install -r requirements-dev.txt -r recon/requirements.txt`, then
+`pip install --no-deps -r recon/requirements-nodeps.txt`. Docker and CI use these requirement files.
+
+`RECON_PYTHON` can point the worker at a separate pipeline interpreter (by default it uses its own).
 To try the whole flow without the real pipeline, point the worker at the fake:
 `RECON_COMMAND="python tests/fake_recon/fake_cli.py" python -m app.worker` (`FAKE_RECON_MODE=fail|slow|...`).
 
