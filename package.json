@@ -1,0 +1,15 @@
+{
+  "name": "webrecon",
+  "private": true,
+  "description": "Photos in, textured 3D models out. Root scripts for local development (work with npm or pnpm).",
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "setup:lite": "node scripts/setup.mjs --no-pipeline",
+    "dev": "node scripts/dev.mjs",
+    "dev:mock": "npm --prefix frontend run dev:mock",
+    "test": "node scripts/test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
